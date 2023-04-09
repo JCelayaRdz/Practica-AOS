@@ -83,7 +83,7 @@ components:
 
 
     Id_Recurso:
-      title: Identificador de un recurso
+      title: 'Identificador de un recurso'
       description:  |
         El identificador de un recurso es un código hash obtenido mediante el algoritmo SHA 255,
         lo que significa que la longitud del identificador es de 64 caracteres hexadecimales (0-9 y A-F)
@@ -93,7 +93,7 @@ components:
       x-faker: helpers.regexpStyleStringParse('^[a-fA-F0-9]{64}$')
 
     DNI_Cliente:
-      title: Documento nacional de identidad
+      title: 'Documento nacional de identidad'
       description: |
         Documento personal e intransferible que identifica a los ciudadanos españoles
         y a los residentes extranjeros en España. El DNI consta de 8 dígitos (0-9) seguidos
@@ -104,7 +104,7 @@ components:
       x-faker: helpers.regexpStyleStringParse('^[0-9]{8}[A-Z]$')
 
     Sexo_Cliente:
-      title: Sexo de un cliente
+      title: 'Sexo de un cliente'
       description: | 
         Enum que representa el sexo de un cliente:
         * `Masculino`
@@ -115,7 +115,7 @@ components:
       x-faker: helpers.arrayElement(['Masculino', 'Femenino', 'Otro'])
 
     Numero_Telefono:
-      title: Número de telefono
+      title: 'Número de telefono'
       description: | 
         Número de teléfono (español) de un cliente. Este esquema permite
         el formato internacional (+34, 0034 o 34) al principio del número.
@@ -127,7 +127,7 @@ components:
       x-faker: helpers.regexpStyleStringParse('^(\+34|0034|34)?[6-9]\d{8}$')
 
     Correo_Electronico:
-      title: Correo electrónico
+      title: 'Correo electrónico'
       description: Correo electrónico de un cliente
       type: string
       pattern: "^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*$"
@@ -135,7 +135,7 @@ components:
       x-faker: helpers.regexpStyleStringParse('^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*$')
 
     Direccion_Cliente:
-      title: Dirección de un cliente
+      title: 'Dirección de un cliente'
       # TODO: Mejorar la descricpion, revisar required
       description: Dirección de un cliente
       type: object
@@ -143,17 +143,18 @@ components:
         direccion:
           type: object
           required: [id]
-          id_direccion:
-            $ref: '#/components/schemas/Id_Recurso'
-          nombre_calle:
-            $ref: '#/components/schemas/Nombre_Calle'
-          numero_edificion:
-            type: integer
-            format: int32
-            description: Representa el nombre de un portal o de una casa.
+          properties:
+            id_direccion:
+              $ref: '#/components/schemas/Id_Recurso'
+            nombre_calle:
+              $ref: '#/components/schemas/Nombre_Calle'
+            numero_edificion:
+              type: integer
+              format: int32
+              description: Representa el nombre de un portal o de una casa.
 
     Nombre_Calle:
-      title: Nombre de una calle
+      title: 'Nombre de una calle'
       description: |
         Este campo representa el nombre de una calle, de tal forma que siempre empiece con la
         abreviatura C/
