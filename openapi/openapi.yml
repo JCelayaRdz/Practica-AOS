@@ -53,6 +53,45 @@ paths:
         '404':
           $ref: '#/components/responses/Response_404'
 
+    post:
+      # TODO: Preguntar si es necesario añadir el código de estado 400
+      summary: Añade un nuevo cliente
+      description: |
+        Los códigos de estado HTTP que puede devolver este endpoint son los siguientes
+        
+        | Status Code | Descripción          | Motivo                                    |
+        | ------------| ---------------------| ------------------------------------------|
+        | **201**     | CREATED              | Se ha añadido un cliente                  |
+        | **422**     | UNPROCESSABLE ENTITY | Falta alguno de los atributos obligatorios|
+      tags: ['👤 Cliente']
+      operationId: cliente_post
+      requestBody:
+        $ref: '#/components/requestBodies/clienteRB'
+      responses:
+        '201':
+          description: Cliente añadido
+          headers:
+            Location:
+              $ref: '#/components/headers/Location'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+        '422':
+          $ref: '#/components/responses/Response_422'
+
+    options:
+      summary: Devuelve la lista de los métodos HTTP soportados por este endpoint
+      description: Devuelve una cabecera `Allow` con la lista de métodos HTTP soportados, separados por comas
+      operationId: cliente_coptions
+      tags: ['👤 Cliente']
+      responses:
+        '204':
+          description: 'Devuelve la cabecera `Allow` &lt;El cuerpo de la respuesta está vacío&gt;'
+          headers:
+            Allow:
+              $ref: '#/components/headers/Allow'
+
 components:
   schemas:
     Cliente:
@@ -282,6 +321,21 @@ components:
         example:
           abcdefg123456789
 
+    Location:
+      description: '`URI` del recurso creado'
+      schema:
+        type: string
+        format: uri
+        x-faker: internet.url
+        example:
+          com/api/v1/plataformas/caae655b2617405e721d27d433331d27adb871354ce6c9be45acc90866df24f4
+
+    Allow:
+      description: Lista de métodos HTTP soportados
+      schema:
+        type: string
+      example: GET, POST, PUT, DELETE, OPTIONS
+
   responses:
     Response_404:
       description: '`NOT FOUND`: recurso no disponible'
@@ -292,6 +346,17 @@ components:
           examples:
             response-http-404:
               $ref: '#/components/examples/response-http-404'
+
+    Response_422:
+      description: '`UNPROCESSABLE ENTITY`: Faltan atributos obligatorios'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/HTTP_Problem'
+          examples:
+            response-http-422:
+              $ref: '#/components/examples/response-http-422'
+
 
   examples:
     response-http-404:
@@ -324,3 +389,11 @@ components:
               "self": { "href": "https://example.com/api/v1/clientes/5f83d8cdc61c0ab3fe3cc2f7fe47a93a1ea26d64bc6b9a4efb70a40e642ac7a5",
                         "rel": "cliente_get cliente_delete cliente_put"}
             }}}
+
+    response-http-422:
+      value:
+        type: https://httpstatuses.com/422
+        title: UNPROCESSABLE ENTITY
+        status: 422
+        detail: Faltan atributos obligatorios
+        instance: about:blank
