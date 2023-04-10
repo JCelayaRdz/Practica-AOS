@@ -29,8 +29,8 @@ paths:
       tags: ['👤 Cliente']
       parameters:
         - $ref: '#/components/parameters/pageParam'
-        - $ref: '#/components/pareameters/orderParam'
-        - $ref: '#/components/pareameters/orderingParam'
+        - $ref: '#/components/parameters/orderParam'
+        - $ref: '#/components/parameters/orderingParam'
       responses:
         '200':
           description: Lista de clientes del taller
@@ -132,8 +132,6 @@ components:
                   $ref: '#/components/schemas/Link'
                 self:
                   $ref: '#/components/schemas/Link'
-
-
 
 
     Id_Recurso:
