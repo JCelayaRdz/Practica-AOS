@@ -47,7 +47,11 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Cliente'
-
+              examples:
+                clientes-example:
+                  $ref: '#/components/examples/clientes-example'
+        '404':
+          $ref: '#/components/responses/Response_404'
 
 components:
   schemas:
@@ -61,7 +65,7 @@ components:
           # TODO: Revisar required
           required: [id]
           properties:
-            id_cliente:
+            id:
               $ref: '#/components/schemas/Id_Recurso'
             dni:
               $ref: '#/components/schemas/DNI_Cliente'
@@ -80,10 +84,23 @@ components:
               $ref: '#/components/schemas/Correo_Electronico'
             direccion:
               $ref: '#/components/schemas/Direccion_Cliente'
+            links:
+              description: Enlaces de relación del Cliente
+              readOnly: true
+              type: object
+              properties:
+                parent:
+                  $ref: '#/components/schemas/Link'
+                self:
+                  $ref: '#/components/schemas/Link'
+
+
 
 
     Id_Recurso:
+      # TODO: Mejorar descripcion
       title: 'Identificador de un recurso'
+      readOnly: true
       description:  |
         El identificador de un recurso es un código hash obtenido mediante el algoritmo SHA 255,
         lo que significa que la longitud del identificador es de 64 caracteres hexadecimales (0-9 y A-F)
@@ -144,7 +161,7 @@ components:
           type: object
           required: [id]
           properties:
-            id_direccion:
+            id:
               $ref: '#/components/schemas/Id_Recurso'
             nombre_calle:
               $ref: '#/components/schemas/Nombre_Calle'
@@ -152,6 +169,9 @@ components:
               type: integer
               format: int32
               description: Representa el nombre de un portal o de una casa.
+            detalles:
+              type: string
+              description: Detalles adicionales, como el número de piso
 
     Nombre_Calle:
       title: 'Nombre de una calle'
@@ -161,10 +181,56 @@ components:
       type: string
       # TODO: Revisar expresión regular
       pattern: "^C/[a-zA-Z]+"
-      example: "C/ Herencia"
+      example: "C/Herencia"
       x-faker: helpers.regexpStyleStringParse('^C/[a-zA-Z]+')
 
+    HTTP_Problem:
+      type: object
+      externalDocs:
+        url: https://tools.ietf.org/html/rfc7807
+      description: |
+        Detalles de problemas en API's HTTP
+        [https://tools.ietf.org/html/rfc7807](https://tools.ietf.org/html/rfc7807)
+      properties:
+        type:
+          type: string
+          format: uri
+          description: Una referencia URI [RFC3986] que identifica el tipo de problema
+        title:
+          type: string
+          description: Breve resumen legible del tipo de problema
+        status:
+          type: number
+          description: Código de estado HTTP
+        detail:
+          type: string
+          description: Explicación legible específica para este problema
+        instance:
+          type: string
+          format: uri
+          description: >
+            Una referencia de URI que identifica el problema específico.
+            Puede o no proporcionar más información si se elimina la referencia.
 
+
+    Link:
+      description: Enlace de relación
+      title: '🔗 Link'
+      type: object
+      properties:
+        href:
+          description: URL del enlace
+          type: string
+          format: uri
+          x-faker: internet.url
+        rel:
+          description: "Relación del recurso enlazado con el actual. Contiene una lista de tipos
+                          de relaciones separados por espacio."
+          type: string
+          x-faker: lorem.words
+        example:
+          href: https://www.example.com/path/resource
+          rel: relAction1 relAction2
 
   parameters:
     pageParam:
@@ -186,9 +252,13 @@ components:
       allowEmptyValue: false
       schema:
         type: string
-        # TODO: Completar criterios de ordenacion
+        # TODO: Revisar criterios de ordenacion
         enum:
           - id
+          - nombre
+          - apellidos
+          - edad
+          - correo_electronico
 
     orderingParam:
       name: ordering
@@ -211,3 +281,46 @@ components:
         pattern: "[0-9a-f]*"
         example:
           abcdefg123456789
+
+  responses:
+    Response_404:
+      description: '`NOT FOUND`: recurso no disponible'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/HTTP_Problem'
+          examples:
+            response-http-404:
+              $ref: '#/components/examples/response-http-404'
+
+  examples:
+    response-http-404:
+      value:
+        type: https://httpstatuses.com/404
+        title: NOT FOUND
+        status: 404
+        detail: El recurso solicitado no existe.
+        instance: about:blank
+
+    clientes-example:
+      value:
+        # TODO: Revisar links
+        clientes:
+          - { "cliente": { "id": "caae655b2617405e721d27d433331d27adb871354ce6c9be45acc90866df24f4", "dni": "27108370H",
+              "nombre": "Alfonso", "apellidos": "Castillo Jurado", "sexo": "Masculino", "edad": 28,
+              "numero_telefono": "+34672569310", "correo_electronico": "acj@gmail.com", direccion: {
+              "id": "1eacf5a38b205bb664907d0015f78e014a478f5f5778b9cadf22b7bb46c1d927", "nombre_calle": "C/Sol",
+              "numero_edificacion": "10", "detaller": "2A"}, "links": {
+                "parent": { "href": "https://example.com/api/v1/clientes", "rel": "cliente_cget cliente_post" },
+                "self": { "href": "https://example.com/api/v1/clientes/caae655b2617405e721d27d433331d27adb871354ce6c9be45acc90866df24f4",
+                "rel": "cliente_get cliente_delete cliente_put"}
+            }}}
+          - { "cliente": { "id": "5f83d8cdc61c0ab3fe3cc2f7fe47a93a1ea26d64bc6b9a4efb70a40e642ac7a5", "dni": "38219481A",
+                           "nombre": "Lucía", "apellidos": "Romero Tomillo", "sexo": "Femenino", "edad": 33,
+                           "numero_telefono": "+34773569354", "correo_electronico": "lrt@gmail.com", direccion: {
+              "id": "0b9ea78d0119130303310fe22378f899e24ad28e62adc1a83f3afcfffad69f4f", "nombre_calle": "C/Luna",
+              "numero_edificacion": "5", "detaller": "4F"}, "links": {
+              "parent": { "href": "https://example.com/api/v1/clientes", "rel": "cliente_cget cliente_post" },
+              "self": { "href": "https://example.com/api/v1/clientes/5f83d8cdc61c0ab3fe3cc2f7fe47a93a1ea26d64bc6b9a4efb70a40e642ac7a5",
+                        "rel": "cliente_get cliente_delete cliente_put"}
+            }}}
