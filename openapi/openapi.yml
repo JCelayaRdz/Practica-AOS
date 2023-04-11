@@ -327,6 +327,7 @@ components:
             Puede o no proporcionar más información si se elimina la referencia.
 
 
+
     Link:
       description: Enlace de relación
       title: '🔗 Link'
@@ -402,7 +403,6 @@ components:
       schema:
         type: string
         pattern: "[0-9a-f]*"
-
 
   headers:
     ETag:
@@ -529,3 +529,32 @@ components:
                 type: string
               numero_telefono:
                 $ref: '#/components/schemas/Numero_Telefono'
+
+    # TODO: Revisar el esquema y el ejempelo
+    clienteUpdate:
+      description: Nuevos atributos del cliente
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              dni:
+                $ref: '#/components/schemas/DNI_Cliente'
+              nombre:
+                type: string
+              apellidos:
+                type: string
+              sexo:
+                $ref: '#/components/schemas/Sexo_Cliente'
+              edad:
+                type: integer
+                format: int32
+              numero_telefono:
+                $ref: '#/components/schemas/Numero_Telefono'
+              correo_electronico:
+                $ref: '#/components/schemas/Correo_Electronico'
+              direccion:
+                $ref: '#/components/schemas/Direccion_Cliente'
+          example: { "dni": "60789201S", "nombre": "Miguel", "apellidos": "Campos Díaz", sexo: "Otro",
+                    "edad": 45, "numero_telefono": "762349810", "correo_electronico": "mcd@gmail.es" }
