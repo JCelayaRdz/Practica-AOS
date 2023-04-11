@@ -92,6 +92,83 @@ paths:
             Allow:
               $ref: '#/components/headers/Allow'
 
+  /clientes/{cliente_id}:
+    parameters:
+      - $ref: '#/components/parameters/clienteId'
+
+    get:
+      summary: Obtiene el cliente cuyo id es `clienteId`
+      description: |
+        Los códigos de estado HTTP que puede devolver este endpoint son los siguientes
+        
+        | Status Code | Descripción | Motivo                             |
+        | ------------| ------------| -----------------------------------|
+        | **200**     | OK          | Si existe el cliente               |
+        | **404**     | NOT FOUND   | Si no existe el cliente            |
+      operationId: cliente_get
+      tags: ['👤 Cliente']
+      responses:
+        '200':
+          description: Cliente
+          headers:
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+
+        '404':
+          $ref: '#/components/responses/Response_404'
+
+    options:
+      summary: Devuelve la lista de los métodos HTTP soportados por este endpoint
+      description: Devuelve una cabecera `Allow` con la lista de métodos HTTP soportados, separados por comas
+      operationId: cliente_options
+      tags: ['👤 Cliente']
+      responses:
+        '204':
+          description: 'Devuelve la cabecera `Allow` &lt;El cuerpo de la respuesta está vacío&gt;'
+          headers:
+            Allow:
+              $ref: '#/components/headers/Allow'
+
+    put:
+      summary: Modifica el cliente cuyo id es `clienteId`
+      description: |
+        Los códigos de estado HTTP que puede devolver este endpoint son los siguientes
+
+        | Status Code | Descripción         | Motivo                                        |
+        | ------------| --------------------| ----------------------------------------------|
+        | **209**     | CONTENT RETURNED    | Si los datos del cliente han sido actualizado |
+        | **404**     | NOT FOUND           | Si el cliente no existe                       |
+        | **412**     | PRECONDITION FAILED | Si el ETag proporcionado no está actualizado  |
+        | **422**     | UNPROCESSABLE ENTITY| Valor no permitido en alguno de los attributos|
+      operationId: cliente_put
+      tags: ['👤 Cliente']
+      parameters:
+        - $ref: '#/components/parameters/ifMatchParam'
+      requestBody:
+        $ref: '#/components/requestBodies/clienteUpdate'
+      responses:
+        '209':
+          description: '`CONTENT RETURNED`: Los datos del cliente han sido actualizados'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+
+        '404':
+          $ref: '#/components/responses/Response_404'
+
+        '412':
+          $ref: '#/components/responses/Response_412'
+
+        '422':
+          $ref: '#/components/responses/Response_422'
+
+
+
 components:
   schemas:
     Cliente:
@@ -102,7 +179,7 @@ components:
         cliente:
           type: object
           # TODO: Revisar required
-          required: [id]
+          required: [id, dni, nombre, apellidos, numero_telefono]
           properties:
             id:
               $ref: '#/components/schemas/Id_Recurso'
@@ -265,9 +342,9 @@ components:
                           de relaciones separados por espacio."
           type: string
           x-faker: lorem.words
-        example:
-          href: https://www.example.com/path/resource
-          rel: relAction1 relAction2
+        #example:
+         # href: https://www.example.com/path/resource
+         # rel: relAction1 relAction2
 
   parameters:
     pageParam:
@@ -308,6 +385,24 @@ components:
         enum:
           - ASC
           - DESC
+
+    clienteId:
+      name: cliente_id
+      in: path
+      description: Identificador único de un cliente
+      required: true
+      schema:
+        $ref: '#/components/schemas/Id_Recurso'
+
+    ifMatchParam:
+      name: If-Match
+      in: header
+      description: ETag actual del recurso que se quiere modificar
+      required: true
+      schema:
+        type: string
+        pattern: "[0-9a-f]*"
+
 
   headers:
     ETag:
@@ -355,6 +450,15 @@ components:
             response-http-422:
               $ref: '#/components/examples/response-http-422'
 
+    Response_412:
+      description: '`PRECONDITION FAILED`: El ETag no está actualizado'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HTTP_Problem'
+          examples:
+            response-http-412:
+              $ref: '#/components/examples/response-http-412'
 
   examples:
     response-http-404:
@@ -395,3 +499,33 @@ components:
         status: 422
         detail: Faltan atributos obligatorios
         instance: about:blank
+
+    response-http-412:
+      value:
+        type: https://httpstatuses.com/412
+        title: PRECONDITION FAILED
+        status: 412
+        detail: El ETag no está actualizado
+        instance: about:blank
+
+  requestBodies:
+    # TODO: Revisar request body
+    clienteRB:
+      description: Información del nuevo cliente
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [id, dni, nombre, apellidos, numero_telefono]
+            properties:
+              id:
+                $ref: '#/components/schemas/Id_Recurso'
+              dni:
+                $ref: '#/components/schemas/DNI_Cliente'
+              nombre:
+                type: string
+              apellidos:
+                type: string
+              numero_telefono:
+                $ref: '#/components/schemas/Numero_Telefono'
