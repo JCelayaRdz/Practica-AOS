@@ -71,6 +71,7 @@
           | Status Code | Descripción          | Motivo                                    |
           | ------------| ---------------------| ------------------------------------------|
           | **201**     | CREATED              | Se ha añadido un cliente                  |
+          | **400**     | BAD REQUEST          | Existe un cliente con el id proporcionado |
           | **422**     | UNPROCESSABLE ENTITY | Falta alguno de los atributos obligatorios|
         tags: ['👤 Cliente']
         operationId: cliente_post
@@ -86,6 +87,9 @@
               application/json:
                 schema:
                   $ref: '#/components/schemas/Cliente'
+          '400':
+            $ref: '#/components/responses/Response_400'
+
           '422':
             $ref: '#/components/responses/Response_422'
   
@@ -464,7 +468,17 @@
             examples:
               response-http-412:
                 $ref: '#/components/examples/response-http-412'
-  
+
+      Response_400:
+        description: '`BAD REQUEST`: Existe un cliente con el id proporcionado'
+        content:
+          application/problem+json:
+            schema:
+              $ref: '#/components/schemas/HTTP_Problem'
+            examples:
+              response-http-400:
+                $ref: '#/components/examples/response-http-400'
+
     examples:
       response-http-404:
         value:
@@ -539,7 +553,6 @@
             }
           }
 
-  
       response-http-422:
         value:
           type: https://httpstatuses.com/422
@@ -555,7 +568,15 @@
           status: 412
           detail: El ETag no está actualizado
           instance: about:blank
-  
+
+      response-http-400:
+        value:
+          type: https://httpstatuses.com/400
+          title: BAD REQUEST
+          status: 400
+          detail: Existe un cliente con el id proporcionado
+          instance: about:blank
+
     requestBodies:
       # TODO: Revisar request body
       clienteRB:
