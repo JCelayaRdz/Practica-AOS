@@ -186,7 +186,7 @@
           cliente:
             type: object
             # TODO: Revisar required
-            required: [id, nombre, apellidos, numero_telefono]
+            required: [id, nombre, apellidos, numero_telefono, vehiculos]
             properties:
               id:
                 $ref: '#/components/schemas/Id_Cliente'
