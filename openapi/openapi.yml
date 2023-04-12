@@ -222,7 +222,6 @@
 
       Id_Cliente:
         title: '🆔 Identificador cliente'
-        readOnly: true
         description: |
           El identificador de un cliente es su DNI o su NIE.
           El DNI (Documento Nacional de Identidad) consta de 8 digitos y una letra mayuscula.
@@ -569,18 +568,32 @@
           application/json:
             schema:
               type: object
-              required: [id, dni, nombre, apellidos, numero_telefono]
+              required: [id, nombre, apellidos, numero_telefono, vehiculos]
               properties:
                 id:
-                  $ref: '#/components/schemas/Id_Recurso'
-                dni:
-                  $ref: '#/components/schemas/DNI_Cliente'
+                  $ref: '#/components/schemas/Id_Cliente'
                 nombre:
                   type: string
+                  example: 'Fernando'
                 apellidos:
                   type: string
+                  example: 'Garcia Romero'
+                sexo:
+                  $ref: '#/components/schemas/Sexo_Cliente'
+                edad:
+                  type: integer
+                  format: int32
+                  example: '45'
                 numero_telefono:
                   $ref: '#/components/schemas/Numero_Telefono'
+                correo_electronico:
+                  $ref: '#/components/schemas/Correo_Electronico'
+                direccion:
+                  $ref: '#/components/schemas/Direccion_Cliente'
+                vehiculos:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/VIN_Vehiculo'
   
       # TODO: Revisar el esquema y el ejempelo
       clienteUpdate:
