@@ -21,10 +21,10 @@
         description: |
           Los códigos de estado HTTP que puede devolver este endpoint son los siguientes
           
-          | Código | Descripción | Causa |
-          | ------ | ----------- | ----- |
-          | **200** | OK | Listado completo de clientes |
-          | **404** | NOT FOUND | No existe ningún cliente |
+          | Código  | Descripción | Causa                        |
+          | ------  | ----------- | ---------------------------- |
+          | **200** | OK          | Listado completo de clientes |
+          | **404** | NOT FOUND   | No existe ningún cliente     |
         operationId: cliente_cget
         tags: ['👤 Cliente']
         parameters:
@@ -43,10 +43,19 @@
                   type: object
                   properties:
                     clientes:
-                      description: lista de clientes
+                      description: Lista de clientes
                       type: array
                       items:
                         $ref: '#/components/schemas/Cliente'
+                    links:
+                      description: Enlaces de paginación y de los vehiculos del cliente
+                      readOnly: true
+                      type: object
+                      properties:
+                        prevPage:
+                          $ref: '#/components/schemas/Link'
+                        nextPage:
+                          $ref: '#/components/schemas/Link'
                 examples:
                   clientes-example:
                     $ref: '#/components/examples/clientes-example'
@@ -523,6 +532,17 @@
                 }
               }
             }}
+          links: {
+            "prevPage": {
+              "href": "https://example.com/api/v1/clientes?page=1",
+              "rel": "prevPage"
+            },
+            "nextPage": {
+              "href": "https://example.com/api/v1/clientes?page=2",
+              "rel": "nextPage"
+            }
+          }
+
   
       response-http-422:
         value:
