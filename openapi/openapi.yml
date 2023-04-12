@@ -223,6 +223,12 @@
                     $ref: '#/components/schemas/Link'
                   self:
                     $ref: '#/components/schemas/Link'
+                  # TODO: Mejorar descripcion
+                  vehiculos:
+                    type: array
+                    description: Enlaces HATEOAS a los vehiculos del cliente
+                    items:
+                      $ref: '#/components/schemas/Link'
 
       Id_Cliente:
         title: '🆔 Identificador cliente'
@@ -514,7 +520,17 @@
                 "self": {
                   "href": "https://example.com/api/v1/clientes/82138284V",
                   "rel": "cliente_get cliente_delete cliente_put"
-                }
+                },
+                "vehiculos": [
+                  {
+                    "href": "https://example.com/api/v1/vehiculos/3D7KU28C63G798405",
+                    "rel": "vehiculo"
+                  },
+                  {
+                    "href": "https://example.com/api/v1/vehiculos/JH4KA7580RC013810",
+                    "rel": "vehiculo"
+                  }
+                ]
               }
             }}
             - { "cliente": {
@@ -539,9 +555,16 @@
                 "self": {
                   "href": "https://example.com/api/v1/clientes/Z4467214K",
                   "rel": "cliente_get cliente_delete cliente_put"
-                }
+                },
+                "vehiculos": [
+                  {
+                    "href": "https://example.com/api/v1/vehiculos/JH4KA7630NC013822",
+                    "rel": "vehiculo"
+                  }
+                ]
               }
             }}
+
           links: {
             "prevPage": {
               "href": "https://example.com/api/v1/clientes?page=1",
