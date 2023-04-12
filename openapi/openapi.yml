@@ -268,20 +268,17 @@
         # TODO: Mejorar la descricpion, revisar required
         description: Dirección de un cliente
         type: object
+        required: [nombre_calle, numero_edificion]
         properties:
-          direccion:
-            type: object
-            required: [nombre_calle, numero_edificion]
-            properties:
-              nombre_calle:
-                $ref: '#/components/schemas/Nombre_Calle'
-              numero_edificion:
-                type: integer
-                format: int32
-                description: Representa el nombre de un portal o de una casa.
-              detalles:
-                type: string
-                description: Detalles adicionales, como el número de piso
+          nombre_calle:
+            $ref: '#/components/schemas/Nombre_Calle'
+          numero_edificion:
+            type: integer
+            format: int32
+            description: Representa el nombre de un portal o de una casa.
+          detalles:
+            type: string
+            description: Detalles adicionales, como el número de piso
   
       Nombre_Calle:
         title: '🛣️ Calle'
