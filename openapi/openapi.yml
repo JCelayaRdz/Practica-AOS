@@ -1,546 +1,186 @@
-openapi: 3.0.3
-
-info:
-  version: 1.0.0
-  title: "[Equipo 6] Gestión de clientes"
-  description: >
-    ## API REST para la gestión de clientes de talleres de mecánica
-
-servers:
-  - url: http://127.0.0.1:80/api/v1
-    description: Servidor
-
-tags:
-  - name: '👤 Cliente'
-    description: Cliente
-
-paths:
-  /clientes:
-    get:
-      summary: Obtiene todos los clientes de un taller
-      description: |
-        Los códigos de estado HTTP que puede devolver este endpoint son los siguientes
-        
-        | Código | Descripción | Causa |
-        | ------ | ----------- | ----- |
-        | **200** | OK | Listado completo de clientes |
-        | **404** | NOT FOUND | No existe ningún cliente |
-      operationId: cliente_cget
-      tags: ['👤 Cliente']
+  openapi: 3.0.3
+  
+  info:
+    version: 1.0.0
+    title: "[Equipo 6] Gestión de clientes"
+    description: >
+      ## API REST para la gestión de clientes de talleres de mecánica
+  
+  servers:
+    - url: http://127.0.0.1:80/api/v1
+      description: Servidor
+  
+  tags:
+    - name: '👤 Cliente'
+      description: Cliente
+  
+  paths:
+    /clientes:
+      get:
+        summary: Obtiene todos los clientes de un taller
+        description: |
+          Los códigos de estado HTTP que puede devolver este endpoint son los siguientes
+          
+          | Código | Descripción | Causa |
+          | ------ | ----------- | ----- |
+          | **200** | OK | Listado completo de clientes |
+          | **404** | NOT FOUND | No existe ningún cliente |
+        operationId: cliente_cget
+        tags: ['👤 Cliente']
+        parameters:
+          - $ref: '#/components/parameters/pageParam'
+          - $ref: '#/components/parameters/orderParam'
+          - $ref: '#/components/parameters/orderingParam'
+        responses:
+          '200':
+            description: Lista de clientes del taller
+            headers:
+              ETag:
+                $ref: '#/components/headers/ETag'
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    clientes:
+                      description: lista de clientes
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Cliente'
+                examples:
+                  clientes-example:
+                    $ref: '#/components/examples/clientes-example'
+          '404':
+            $ref: '#/components/responses/Response_404'
+  
+      post:
+        # TODO: Preguntar si es necesario añadir el código de estado 400
+        summary: Añade un nuevo cliente
+        description: |
+          Los códigos de estado HTTP que puede devolver este endpoint son los siguientes
+          
+          | Status Code | Descripción          | Motivo                                    |
+          | ------------| ---------------------| ------------------------------------------|
+          | **201**     | CREATED              | Se ha añadido un cliente                  |
+          | **422**     | UNPROCESSABLE ENTITY | Falta alguno de los atributos obligatorios|
+        tags: ['👤 Cliente']
+        operationId: cliente_post
+        requestBody:
+          $ref: '#/components/requestBodies/clienteRB'
+        responses:
+          '201':
+            description: Cliente añadido
+            headers:
+              Location:
+                $ref: '#/components/headers/Location'
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Cliente'
+          '422':
+            $ref: '#/components/responses/Response_422'
+  
+      options:
+        summary: Devuelve la lista de los métodos HTTP soportados por este endpoint
+        description: Devuelve una cabecera `Allow` con la lista de métodos HTTP soportados, separados por comas
+        operationId: cliente_coptions
+        tags: ['👤 Cliente']
+        responses:
+          '204':
+            description: 'Devuelve la cabecera `Allow` &lt;El cuerpo de la respuesta está vacío&gt;'
+            headers:
+              Allow:
+                $ref: '#/components/headers/Allow'
+  
+    /clientes/{cliente_id}:
       parameters:
-        - $ref: '#/components/parameters/pageParam'
-        - $ref: '#/components/parameters/orderParam'
-        - $ref: '#/components/parameters/orderingParam'
-      responses:
-        '200':
-          description: Lista de clientes del taller
-          headers:
-            ETag:
-              $ref: '#/components/headers/ETag'
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  clientes:
-                    description: lista de clientes
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Cliente'
-              examples:
-                clientes-example:
-                  $ref: '#/components/examples/clientes-example'
-        '404':
-          $ref: '#/components/responses/Response_404'
+        - $ref: '#/components/parameters/clienteId'
+  
+      get:
+        summary: Obtiene el cliente cuyo id es `clienteId`
+        description: |
+          Los códigos de estado HTTP que puede devolver este endpoint son los siguientes
+          
+          | Status Code | Descripción | Motivo                             |
+          | ------------| ------------| -----------------------------------|
+          | **200**     | OK          | Si existe el cliente               |
+          | **404**     | NOT FOUND   | Si no existe el cliente            |
+        operationId: cliente_get
+        tags: ['👤 Cliente']
+        responses:
+          '200':
+            description: Cliente
+            headers:
+              ETag:
+                $ref: '#/components/headers/ETag'
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Cliente'
+  
+          '404':
+            $ref: '#/components/responses/Response_404'
+  
+      options:
+        summary: Devuelve la lista de los métodos HTTP soportados por este endpoint
+        description: Devuelve una cabecera `Allow` con la lista de métodos HTTP soportados, separados por comas
+        operationId: cliente_options
+        tags: ['👤 Cliente']
+        responses:
+          '204':
+            description: 'Devuelve la cabecera `Allow` &lt;El cuerpo de la respuesta está vacío&gt;'
+            headers:
+              Allow:
+                $ref: '#/components/headers/Allow'
+  
+      put:
+        summary: Modifica el cliente cuyo id es `clienteId`
+        description: |
+          Los códigos de estado HTTP que puede devolver este endpoint son los siguientes
+  
+          | Status Code | Descripción         | Motivo                                        |
+          | ------------| --------------------| ----------------------------------------------|
+          | **209**     | CONTENT RETURNED    | Si los datos del cliente han sido actualizado |
+          | **404**     | NOT FOUND           | Si el cliente no existe                       |
+          | **412**     | PRECONDITION FAILED | Si el ETag proporcionado no está actualizado  |
+          | **422**     | UNPROCESSABLE ENTITY| Valor no permitido en alguno de los attributos|
+        operationId: cliente_put
+        tags: ['👤 Cliente']
+        parameters:
+          - $ref: '#/components/parameters/ifMatchParam'
+        requestBody:
+          $ref: '#/components/requestBodies/clienteUpdate'
+        responses:
+          '209':
+            description: '`CONTENT RETURNED`: Los datos del cliente han sido actualizados'
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Cliente'
+  
+          '404':
+            $ref: '#/components/responses/Response_404'
+  
+          '412':
+            $ref: '#/components/responses/Response_412'
+  
+          '422':
+            $ref: '#/components/responses/Response_422'
 
-    post:
-      # TODO: Preguntar si es necesario añadir el código de estado 400
-      summary: Añade un nuevo cliente
-      description: |
-        Los códigos de estado HTTP que puede devolver este endpoint son los siguientes
-        
-        | Status Code | Descripción          | Motivo                                    |
-        | ------------| ---------------------| ------------------------------------------|
-        | **201**     | CREATED              | Se ha añadido un cliente                  |
-        | **422**     | UNPROCESSABLE ENTITY | Falta alguno de los atributos obligatorios|
-      tags: ['👤 Cliente']
-      operationId: cliente_post
-      requestBody:
-        $ref: '#/components/requestBodies/clienteRB'
-      responses:
-        '201':
-          description: Cliente añadido
-          headers:
-            Location:
-              $ref: '#/components/headers/Location'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Cliente'
-        '422':
-          $ref: '#/components/responses/Response_422'
-
-    options:
-      summary: Devuelve la lista de los métodos HTTP soportados por este endpoint
-      description: Devuelve una cabecera `Allow` con la lista de métodos HTTP soportados, separados por comas
-      operationId: cliente_coptions
-      tags: ['👤 Cliente']
-      responses:
-        '204':
-          description: 'Devuelve la cabecera `Allow` &lt;El cuerpo de la respuesta está vacío&gt;'
-          headers:
-            Allow:
-              $ref: '#/components/headers/Allow'
-
-  /clientes/{cliente_id}:
-    parameters:
-      - $ref: '#/components/parameters/clienteId'
-
-    get:
-      summary: Obtiene el cliente cuyo id es `clienteId`
-      description: |
-        Los códigos de estado HTTP que puede devolver este endpoint son los siguientes
-        
-        | Status Code | Descripción | Motivo                             |
-        | ------------| ------------| -----------------------------------|
-        | **200**     | OK          | Si existe el cliente               |
-        | **404**     | NOT FOUND   | Si no existe el cliente            |
-      operationId: cliente_get
-      tags: ['👤 Cliente']
-      responses:
-        '200':
-          description: Cliente
-          headers:
-            ETag:
-              $ref: '#/components/headers/ETag'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Cliente'
-
-        '404':
-          $ref: '#/components/responses/Response_404'
-
-    options:
-      summary: Devuelve la lista de los métodos HTTP soportados por este endpoint
-      description: Devuelve una cabecera `Allow` con la lista de métodos HTTP soportados, separados por comas
-      operationId: cliente_options
-      tags: ['👤 Cliente']
-      responses:
-        '204':
-          description: 'Devuelve la cabecera `Allow` &lt;El cuerpo de la respuesta está vacío&gt;'
-          headers:
-            Allow:
-              $ref: '#/components/headers/Allow'
-
-    put:
-      summary: Modifica el cliente cuyo id es `clienteId`
-      description: |
-        Los códigos de estado HTTP que puede devolver este endpoint son los siguientes
-
-        | Status Code | Descripción         | Motivo                                        |
-        | ------------| --------------------| ----------------------------------------------|
-        | **209**     | CONTENT RETURNED    | Si los datos del cliente han sido actualizado |
-        | **404**     | NOT FOUND           | Si el cliente no existe                       |
-        | **412**     | PRECONDITION FAILED | Si el ETag proporcionado no está actualizado  |
-        | **422**     | UNPROCESSABLE ENTITY| Valor no permitido en alguno de los attributos|
-      operationId: cliente_put
-      tags: ['👤 Cliente']
-      parameters:
-        - $ref: '#/components/parameters/ifMatchParam'
-      requestBody:
-        $ref: '#/components/requestBodies/clienteUpdate'
-      responses:
-        '209':
-          description: '`CONTENT RETURNED`: Los datos del cliente han sido actualizados'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Cliente'
-
-        '404':
-          $ref: '#/components/responses/Response_404'
-
-        '412':
-          $ref: '#/components/responses/Response_412'
-
-        '422':
-          $ref: '#/components/responses/Response_422'
-
-
-
-components:
-  schemas:
-    Cliente:
-      title: 'Cliente del taller'
-      description: Datos de un cliente de un taller de mecánica
-      type: object
-      properties:
-        cliente:
-          type: object
-          # TODO: Revisar required
-          required: [id, dni, nombre, apellidos, numero_telefono]
-          properties:
-            id:
-              $ref: '#/components/schemas/Id_Recurso'
-            dni:
-              $ref: '#/components/schemas/DNI_Cliente'
-            nombre:
-              type: string
-            apellidos:
-              type: string
-            sexo:
-              $ref: '#/components/schemas/Sexo_Cliente'
-            edad:
-              type: integer
-              format: int32
-            numero_telefono:
-              $ref: '#/components/schemas/Numero_Telefono'
-            correo_electronico:
-              $ref: '#/components/schemas/Correo_Electronico'
-            direccion:
-              $ref: '#/components/schemas/Direccion_Cliente'
-            links:
-              description: Enlaces de relación del Cliente
-              readOnly: true
-              type: object
-              properties:
-                parent:
-                  $ref: '#/components/schemas/Link'
-                self:
-                  $ref: '#/components/schemas/Link'
-
-
-    Id_Recurso:
-      # TODO: Mejorar descripcion
-      title: 'Identificador de un recurso'
-      readOnly: true
-      description:  |
-        El identificador de un recurso es un código hash obtenido mediante el algoritmo SHA 255,
-        lo que significa que la longitud del identificador es de 64 caracteres hexadecimales (0-9 y A-F)
-      type: string
-      pattern: "^[a-fA-F0-9]{64}$"
-      example: "2fc5dce0e4395d5c5ca9fa5e47c5d1d23f78c32fca27a6d933db98b7a8e1a6ba"
-      x-faker: helpers.regexpStyleStringParse('^[a-fA-F0-9]{64}$')
-
-    DNI_Cliente:
-      title: 'Documento nacional de identidad'
-      description: |
-        Documento personal e intransferible que identifica a los ciudadanos españoles
-        y a los residentes extranjeros en España. El DNI consta de 8 dígitos (0-9) seguidos
-        de una letra mayúscula (A-Z).
-      type: string
-      pattern: "^[0-9]{8}[A-Z]$"
-      example: "12345678A"
-      x-faker: helpers.regexpStyleStringParse('^[0-9]{8}[A-Z]$')
-
-    Sexo_Cliente:
-      title: 'Sexo de un cliente'
-      description: | 
-        Enum que representa el sexo de un cliente:
-        * `Masculino`
-        * `Femenino`
-        * `Otro`
-      type: string
-      enum: ["Masculino", "Femenino", "Otro"]
-      x-faker: helpers.arrayElement(['Masculino', 'Femenino', 'Otro'])
-
-    Numero_Telefono:
-      title: 'Número de telefono'
-      description: | 
-        Número de teléfono (español) de un cliente. Este esquema permite
-        el formato internacional (+34, 0034 o 34) al principio del número.
-        Un número de teléfono en España consta de un dígito entre 6 y 9 seguido
-        de otros 8 dígitos.
-      type: string
-      pattern: "^(\+34|0034|34)?[6-9]\d{8}$"
-      example: "+34612345678"
-      x-faker: helpers.regexpStyleStringParse('^(\+34|0034|34)?[6-9]\d{8}$')
-
-    Correo_Electronico:
-      title: 'Correo electrónico'
-      description: Correo electrónico de un cliente
-      type: string
-      pattern: "^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*$"
-      example: "usuario@dominio.com"
-      x-faker: helpers.regexpStyleStringParse('^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*$')
-
-    Direccion_Cliente:
-      title: 'Dirección de un cliente'
-      # TODO: Mejorar la descricpion, revisar required
-      description: Dirección de un cliente
-      type: object
-      properties:
-        direccion:
-          type: object
-          required: [id]
-          properties:
-            id:
-              $ref: '#/components/schemas/Id_Recurso'
-            nombre_calle:
-              $ref: '#/components/schemas/Nombre_Calle'
-            numero_edificion:
-              type: integer
-              format: int32
-              description: Representa el nombre de un portal o de una casa.
-            detalles:
-              type: string
-              description: Detalles adicionales, como el número de piso
-
-    Nombre_Calle:
-      title: 'Nombre de una calle'
-      description: |
-        Este campo representa el nombre de una calle, de tal forma que siempre empiece con la
-        abreviatura C/
-      type: string
-      # TODO: Revisar expresión regular
-      pattern: "^C/[a-zA-Z]+"
-      example: "C/Herencia"
-      x-faker: helpers.regexpStyleStringParse('^C/[a-zA-Z]+')
-
-    HTTP_Problem:
-      type: object
-      externalDocs:
-        url: https://tools.ietf.org/html/rfc7807
-      description: |
-        Detalles de problemas en API's HTTP
-        [https://tools.ietf.org/html/rfc7807](https://tools.ietf.org/html/rfc7807)
-      properties:
-        type:
-          type: string
-          format: uri
-          description: Una referencia URI [RFC3986] que identifica el tipo de problema
-        title:
-          type: string
-          description: Breve resumen legible del tipo de problema
-        status:
-          type: number
-          description: Código de estado HTTP
-        detail:
-          type: string
-          description: Explicación legible específica para este problema
-        instance:
-          type: string
-          format: uri
-          description: >
-            Una referencia de URI que identifica el problema específico.
-            Puede o no proporcionar más información si se elimina la referencia.
-
-
-
-    Link:
-      description: Enlace de relación
-      title: '🔗 Link'
-      type: object
-      properties:
-        href:
-          description: URL del enlace
-          type: string
-          format: uri
-          x-faker: internet.url
-        rel:
-          description: "Relación del recurso enlazado con el actual. Contiene una lista de tipos
-                          de relaciones separados por espacio."
-          type: string
-          x-faker: lorem.words
-        #example:
-         # href: https://www.example.com/path/resource
-         # rel: relAction1 relAction2
-
-  parameters:
-    pageParam:
-      name: page
-      in: query
-      description: 'Número de página de clientes'
-      required: false
-      allowEmptyValue: false
-      schema:
-        type: integer
-        format: int32
-        minimum: 1
-
-    orderParam:
-      name: order
-      in: query
-      description: 'Criterio de ordenación de clientes'
-      required: false
-      allowEmptyValue: false
-      schema:
-        type: string
-        # TODO: Revisar criterios de ordenacion
-        enum:
-          - id
-          - nombre
-          - apellidos
-          - edad
-          - correo_electronico
-
-    orderingParam:
-      name: ordering
-      in: query
-      description: 'Dirección de la ordenación: `ASC`(ascendente) | `DESC`(descendente)'
-      required: false
-      allowEmptyValue: false
-      schema:
-        type: string
-        enum:
-          - ASC
-          - DESC
-
-    clienteId:
-      name: cliente_id
-      in: path
-      description: Identificador único de un cliente
-      required: true
-      schema:
-        $ref: '#/components/schemas/Id_Recurso'
-
-    ifMatchParam:
-      name: If-Match
-      in: header
-      description: ETag actual del recurso que se quiere modificar
-      required: true
-      schema:
-        type: string
-        pattern: "[0-9a-f]*"
-
-  headers:
-    ETag:
-      # TODO: Mejorar la descripción
-      description: "Entity Tag"
-      schema:
-        type: string
-        pattern: "[0-9a-f]*"
-        example:
-          abcdefg123456789
-
-    Location:
-      description: '`URI` del recurso creado'
-      schema:
-        type: string
-        format: uri
-        x-faker: internet.url
-        example:
-          com/api/v1/plataformas/caae655b2617405e721d27d433331d27adb871354ce6c9be45acc90866df24f4
-
-    Allow:
-      description: Lista de métodos HTTP soportados
-      schema:
-        type: string
-      example: GET, POST, PUT, DELETE, OPTIONS
-
-  responses:
-    Response_404:
-      description: '`NOT FOUND`: recurso no disponible'
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/HTTP_Problem'
-          examples:
-            response-http-404:
-              $ref: '#/components/examples/response-http-404'
-
-    Response_422:
-      description: '`UNPROCESSABLE ENTITY`: Faltan atributos obligatorios'
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/HTTP_Problem'
-          examples:
-            response-http-422:
-              $ref: '#/components/examples/response-http-422'
-
-    Response_412:
-      description: '`PRECONDITION FAILED`: El ETag no está actualizado'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/HTTP_Problem'
-          examples:
-            response-http-412:
-              $ref: '#/components/examples/response-http-412'
-
-  examples:
-    response-http-404:
-      value:
-        type: https://httpstatuses.com/404
-        title: NOT FOUND
-        status: 404
-        detail: El recurso solicitado no existe.
-        instance: about:blank
-
-    clientes-example:
-      value:
-        # TODO: Revisar links
-        clientes:
-          - { "cliente": { "id": "caae655b2617405e721d27d433331d27adb871354ce6c9be45acc90866df24f4", "dni": "27108370H",
-              "nombre": "Alfonso", "apellidos": "Castillo Jurado", "sexo": "Masculino", "edad": 28,
-              "numero_telefono": "+34672569310", "correo_electronico": "acj@gmail.com", direccion: {
-              "id": "1eacf5a38b205bb664907d0015f78e014a478f5f5778b9cadf22b7bb46c1d927", "nombre_calle": "C/Sol",
-              "numero_edificacion": "10", "detaller": "2A"}, "links": {
-                "parent": { "href": "https://example.com/api/v1/clientes", "rel": "cliente_cget cliente_post" },
-                "self": { "href": "https://example.com/api/v1/clientes/caae655b2617405e721d27d433331d27adb871354ce6c9be45acc90866df24f4",
-                "rel": "cliente_get cliente_delete cliente_put"}
-            }}}
-          - { "cliente": { "id": "5f83d8cdc61c0ab3fe3cc2f7fe47a93a1ea26d64bc6b9a4efb70a40e642ac7a5", "dni": "38219481A",
-                           "nombre": "Lucía", "apellidos": "Romero Tomillo", "sexo": "Femenino", "edad": 33,
-                           "numero_telefono": "+34773569354", "correo_electronico": "lrt@gmail.com", direccion: {
-              "id": "0b9ea78d0119130303310fe22378f899e24ad28e62adc1a83f3afcfffad69f4f", "nombre_calle": "C/Luna",
-              "numero_edificacion": "5", "detaller": "4F"}, "links": {
-              "parent": { "href": "https://example.com/api/v1/clientes", "rel": "cliente_cget cliente_post" },
-              "self": { "href": "https://example.com/api/v1/clientes/5f83d8cdc61c0ab3fe3cc2f7fe47a93a1ea26d64bc6b9a4efb70a40e642ac7a5",
-                        "rel": "cliente_get cliente_delete cliente_put"}
-            }}}
-
-    response-http-422:
-      value:
-        type: https://httpstatuses.com/422
-        title: UNPROCESSABLE ENTITY
-        status: 422
-        detail: Faltan atributos obligatorios
-        instance: about:blank
-
-    response-http-412:
-      value:
-        type: https://httpstatuses.com/412
-        title: PRECONDITION FAILED
-        status: 412
-        detail: El ETag no está actualizado
-        instance: about:blank
-
-  requestBodies:
-    # TODO: Revisar request body
-    clienteRB:
-      description: Información del nuevo cliente
-      required: true
-      content:
-        application/json:
-          schema:
+  components:
+    schemas:
+      Cliente:
+        title: '👤 Cliente'
+        description: Datos de un cliente de un taller de mecánica
+        type: object
+        properties:
+          cliente:
             type: object
-            required: [id, dni, nombre, apellidos, numero_telefono]
+            # TODO: Revisar required
+            required: [id, nombre, apellidos, numero_telefono]
             properties:
               id:
-                $ref: '#/components/schemas/Id_Recurso'
-              dni:
-                $ref: '#/components/schemas/DNI_Cliente'
-              nombre:
-                type: string
-              apellidos:
-                type: string
-              numero_telefono:
-                $ref: '#/components/schemas/Numero_Telefono'
-
-    # TODO: Revisar el esquema y el ejempelo
-    clienteUpdate:
-      description: Nuevos atributos del cliente
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              dni:
-                $ref: '#/components/schemas/DNI_Cliente'
+                $ref: '#/components/schemas/Id_Cliente'
               nombre:
                 type: string
               apellidos:
@@ -556,5 +196,397 @@ components:
                 $ref: '#/components/schemas/Correo_Electronico'
               direccion:
                 $ref: '#/components/schemas/Direccion_Cliente'
-          example: { "dni": "60789201S", "nombre": "Miguel", "apellidos": "Campos Díaz", sexo: "Otro",
-                    "edad": 45, "numero_telefono": "762349810", "correo_electronico": "mcd@gmail.es" }
+              vehiculos:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VIN_Vehiculo'
+                example: ['5NPET46C07H192362', '1B6MF36C6SS164013']
+              links:
+                description: Enlaces de relación del Cliente
+                readOnly: true
+                type: object
+                properties:
+                  parent:
+                    $ref: '#/components/schemas/Link'
+                  self:
+                    $ref: '#/components/schemas/Link'
+
+      Id_Cliente:
+        title: '🆔 Identificador cliente'
+        readOnly: true
+        description: |
+          El identificador de un cliente es su DNI o su NIE.
+          El DNI (Documento Nacional de Identidad) consta de 8 digitos y una letra mayuscula.
+          El NIE (Número de Identidad de Extranjero) consta de una letra inicial mayuscula (X,Y o Z),
+          7 digitos y una letra mayuscula (calculada a partir de los 7 digitos anteriores).
+        type: string
+        pattern: '^[XYZ]?\d{7,8}[A-Z]$'
+        example: [ 'X1234567Z', '39580182H']
+        x-faker: helpers.regexpStyleStringParse('^[XYZ]?\d{7,8}[A-Z]$')
+
+      Sexo_Cliente:
+        title: '👨👩 Sexo'
+        description: | 
+          Enum que representa el sexo de un cliente:
+          * `Masculino`
+          * `Femenino`
+          * `Otro`
+        type: string
+        enum: ["Masculino", "Femenino", "Otro"]
+        x-faker: helpers.arrayElement(['Masculino', 'Femenino', 'Otro'])
+  
+      Numero_Telefono:
+        title: '📞 Número de telefono'
+        description: | 
+          Número de teléfono (español) de un cliente. Este esquema permite
+          el formato internacional (+34, 0034 o 34) al principio del número.
+          Un número de teléfono en España consta de un dígito entre 6 y 9 seguido
+          de otros 8 dígitos.
+        type: string
+        #pattern: "^(\+34|0034|34)?[6-9]\d{8}$"
+        example: "+34612345678"
+        x-faker: helpers.regexpStyleStringParse('^(\+34|0034|34)?[6-9]\d{8}$')
+  
+      Correo_Electronico:
+        title: '📧 Correo electrónico'
+        description: Correo electrónico de un cliente
+        type: string
+        #pattern: "^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*$"
+        example: "usuario@dominio.com"
+        x-faker: helpers.regexpStyleStringParse('^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*$')
+  
+      Direccion_Cliente:
+        title: '📍 Dirección'
+        # TODO: Mejorar la descricpion, revisar required
+        description: Dirección de un cliente
+        type: object
+        properties:
+          direccion:
+            type: object
+            required: [nombre_calle, numero_edificion]
+            properties:
+              nombre_calle:
+                $ref: '#/components/schemas/Nombre_Calle'
+              numero_edificion:
+                type: integer
+                format: int32
+                description: Representa el nombre de un portal o de una casa.
+              detalles:
+                type: string
+                description: Detalles adicionales, como el número de piso
+  
+      Nombre_Calle:
+        title: '🛣️ Calle'
+        description: |
+          Este campo representa el nombre de una calle, de tal forma que siempre empiece con la
+          abreviatura C/
+        type: string
+        # TODO: Revisar expresión regular
+        pattern: "^C/[a-zA-Z]+"
+        example: "C/Herencia"
+        x-faker: helpers.regexpStyleStringParse('^C/[a-zA-Z]+')
+  
+      HTTP_Problem:
+        title: '🚨 Problema HTTP'
+        type: object
+        externalDocs:
+          url: https://tools.ietf.org/html/rfc7807
+        description: |
+          Detalles de problemas en API's HTTP
+          [https://tools.ietf.org/html/rfc7807](https://tools.ietf.org/html/rfc7807)
+        properties:
+          type:
+            type: string
+            format: uri
+            description: Una referencia URI [RFC3986] que identifica el tipo de problema
+          title:
+            type: string
+            description: Breve resumen legible del tipo de problema
+          status:
+            type: number
+            description: Código de estado HTTP
+          detail:
+            type: string
+            description: Explicación legible específica para este problema
+          instance:
+            type: string
+            format: uri
+            description: >
+              Una referencia de URI que identifica el problema específico.
+              Puede o no proporcionar más información si se elimina la referencia.
+  
+
+
+      Link:
+        description: Enlace de relación
+        title: '🔗 Link'
+        type: object
+        properties:
+          href:
+            description: URL del enlace
+            type: string
+            format: uri
+            x-faker: internet.url
+          rel:
+            description: "Relación del recurso enlazado con el actual. Contiene una lista de tipos
+                            de relaciones separados por espacio."
+            type: string
+            x-faker: lorem.words
+          #example:
+           # href: https://www.example.com/path/resource
+           # rel: relAction1 relAction2
+
+      VIN_Vehiculo:
+        title: '🚗 VIN'
+        description: |
+          Representa una referencia al VIN (Vehicle Identification Number) de un vehículo.
+          El VIN es un código alfanumérico de 17 caracteres que se utiliza para identificar de 
+          manera única un vehículo en todo el mundo.
+        type: string
+        pattern: "^[A-HJ-NPR-Z\\d]{8}[\\dX][A-HJ-NPR-Z\\d]{2}\\d{6}$"
+        example: 2C3CDZC99FH500660
+        x-faker: helpers.regexpStyleStringParse('^[A-HJ-NPR-Z\\d]{8}[\\dX][A-HJ-NPR-Z\\d]{2}\\d{6}$')
+
+    parameters:
+      pageParam:
+        name: page
+        in: query
+        description: 'Número de página de clientes'
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          minimum: 1
+  
+      orderParam:
+        name: order
+        in: query
+        description: 'Criterio de ordenación de clientes'
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          # TODO: Revisar criterios de ordenacion
+          enum:
+            - id
+            - nombre
+            - apellidos
+            - edad
+            - correo_electronico
+  
+      orderingParam:
+        name: ordering
+        in: query
+        description: 'Dirección de la ordenación: `ASC`(ascendente) | `DESC`(descendente)'
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          enum:
+            - ASC
+            - DESC
+  
+      clienteId:
+        name: cliente_id
+        in: path
+        description: Identificador único de un cliente
+        required: true
+        schema:
+          $ref: '#/components/schemas/Id_Recurso'
+  
+      ifMatchParam:
+        name: If-Match
+        in: header
+        description: ETag actual del recurso que se quiere modificar
+        required: true
+        schema:
+          type: string
+          pattern: "[0-9a-f]*"
+  
+    headers:
+      ETag:
+        # TODO: Mejorar la descripción
+        description: "Entity Tag"
+        schema:
+          type: string
+          pattern: "[0-9a-f]*"
+          example:
+            abcdefg123456789
+  
+      Location:
+        description: '`URI` del recurso creado'
+        schema:
+          type: string
+          format: uri
+          x-faker: internet.url
+          example:
+            com/api/v1/plataformas/caae655b2617405e721d27d433331d27adb871354ce6c9be45acc90866df24f4
+  
+      Allow:
+        description: Lista de métodos HTTP soportados
+        schema:
+          type: string
+        example: GET, POST, PUT, DELETE, OPTIONS
+  
+    responses:
+      Response_404:
+        description: '`NOT FOUND`: recurso no disponible'
+        content:
+          application/problem+json:
+            schema:
+              $ref: '#/components/schemas/HTTP_Problem'
+            examples:
+              response-http-404:
+                $ref: '#/components/examples/response-http-404'
+  
+      Response_422:
+        description: '`UNPROCESSABLE ENTITY`: Faltan atributos obligatorios'
+        content:
+          application/problem+json:
+            schema:
+              $ref: '#/components/schemas/HTTP_Problem'
+            examples:
+              response-http-422:
+                $ref: '#/components/examples/response-http-422'
+  
+      Response_412:
+        description: '`PRECONDITION FAILED`: El ETag no está actualizado'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTP_Problem'
+            examples:
+              response-http-412:
+                $ref: '#/components/examples/response-http-412'
+  
+    examples:
+      response-http-404:
+        value:
+          type: https://httpstatuses.com/404
+          title: NOT FOUND
+          status: 404
+          detail: El recurso solicitado no existe.
+          instance: about:blank
+  
+      clientes-example:
+        value:
+          # TODO: Revisar links
+          clientes:
+            - { "cliente": {
+              "id": "82138284V",
+              "nombre": "Alfonso",
+              "apellidos": "Castillo Jurado",
+              "sexo": "Masculino",
+              "edad": 33,
+              "numero_telefono": "+34672569310",
+              "correo_electronico": "acj@gmail.com",
+              "vehiculos": ["3D7KU28C63G798405", "JH4KA7580RC013810"],
+              "direccion": {
+                "nombre_calle": "C/Sol",
+                "numero_edificacion": "10",
+                "detalles": "2A"
+              },
+              "links": {
+                "parent": {
+                  "href": "https://example.com/api/v1/clientes",
+                  "rel": "cliente_cget cliente_post"
+                },
+                "self": {
+                  "href": "https://example.com/api/v1/clientes/82138284V",
+                  "rel": "cliente_get cliente_delete cliente_put"
+                }
+              }
+            }}
+            - { "cliente": {
+              "id": "Z4467214K",
+              "nombre": "Katherine",
+              "apellidos": "Cruz Campo",
+              "sexo": "Femenino",
+              "edad": 22,
+              "numero_telefono": "+34773169320",
+              "correo_electronico": "kathcc@gmail.com",
+              "vehiculos": ["JH4KA7630NC013822"],
+              "direccion": {
+                "nombre_calle": "C/Luna",
+                "numero_edificacion": "11",
+                "detalles": "4F"
+              },
+              "links": {
+                "parent": {
+                  "href": "https://example.com/api/v1/clientes",
+                  "rel": "cliente_cget cliente_post"
+                },
+                "self": {
+                  "href": "https://example.com/api/v1/clientes/Z4467214K",
+                  "rel": "cliente_get cliente_delete cliente_put"
+                }
+              }
+            }}
+  
+      response-http-422:
+        value:
+          type: https://httpstatuses.com/422
+          title: UNPROCESSABLE ENTITY
+          status: 422
+          detail: Faltan atributos obligatorios
+          instance: about:blank
+  
+      response-http-412:
+        value:
+          type: https://httpstatuses.com/412
+          title: PRECONDITION FAILED
+          status: 412
+          detail: El ETag no está actualizado
+          instance: about:blank
+  
+    requestBodies:
+      # TODO: Revisar request body
+      clienteRB:
+        description: Información del nuevo cliente
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [id, dni, nombre, apellidos, numero_telefono]
+              properties:
+                id:
+                  $ref: '#/components/schemas/Id_Recurso'
+                dni:
+                  $ref: '#/components/schemas/DNI_Cliente'
+                nombre:
+                  type: string
+                apellidos:
+                  type: string
+                numero_telefono:
+                  $ref: '#/components/schemas/Numero_Telefono'
+  
+      # TODO: Revisar el esquema y el ejempelo
+      clienteUpdate:
+        description: Nuevos atributos del cliente
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dni:
+                  $ref: '#/components/schemas/DNI_Cliente'
+                nombre:
+                  type: string
+                apellidos:
+                  type: string
+                sexo:
+                  $ref: '#/components/schemas/Sexo_Cliente'
+                edad:
+                  type: integer
+                  format: int32
+                numero_telefono:
+                  $ref: '#/components/schemas/Numero_Telefono'
+                correo_electronico:
+                  $ref: '#/components/schemas/Correo_Electronico'
+                direccion:
+                  $ref: '#/components/schemas/Direccion_Cliente'
+            example: { "dni": "60789201S", "nombre": "Miguel", "apellidos": "Campos Díaz", sexo: "Otro",
+                      "edad": 45, "numero_telefono": "762349810", "correo_electronico": "mcd@gmail.es" }
