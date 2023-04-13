@@ -408,7 +408,7 @@
         description: Identificador único de un cliente
         required: true
         schema:
-          $ref: '#/components/schemas/Id_Recurso'
+          $ref: '#/components/schemas/Id_Cliente'
   
       ifMatchParam:
         name: If-Match
@@ -646,7 +646,7 @@
               type: object
               properties:
                 dni:
-                  $ref: '#/components/schemas/DNI_Cliente'
+                  $ref: '#/components/schemas/Id_Cliente'
                 nombre:
                   type: string
                 apellidos:
