@@ -21,7 +21,7 @@
         description: |
           Los códigos de estado HTTP que puede devolver este endpoint son los siguientes
           
-          | Código  | Descripción | Causa                        |
+          | Código  | Descripción | Motivo                       |
           | ------  | ----------- | ---------------------------- |
           | **200** | OK          | Listado completo de clientes |
           | **404** | NOT FOUND   | No existe ningún cliente     |
@@ -68,7 +68,7 @@
         description: |
           Los códigos de estado HTTP que puede devolver este endpoint son los siguientes
           
-          | Status Code | Descripción          | Motivo                                    |
+          | Código      | Descripción          | Motivo                                    |
           | ------------| ---------------------| ------------------------------------------|
           | **201**     | CREATED              | Se ha añadido un cliente                  |
           | **400**     | BAD REQUEST          | Existe un cliente con el id proporcionado |
@@ -110,11 +110,11 @@
         - $ref: '#/components/parameters/clienteId'
   
       get:
-        summary: Obtiene el cliente cuyo id es `clienteId`
+        summary: Obtiene el cliente cuyo id es clienteId
         description: |
           Los códigos de estado HTTP que puede devolver este endpoint son los siguientes
           
-          | Status Code | Descripción | Motivo                             |
+          | Código      | Descripción | Motivo                             |
           | ------------| ------------| -----------------------------------|
           | **200**     | OK          | Si existe el cliente               |
           | **404**     | NOT FOUND   | Si no existe el cliente            |
@@ -147,11 +147,11 @@
                 $ref: '#/components/headers/Allow'
   
       put:
-        summary: Modifica el cliente cuyo id es `clienteId`
+        summary: Modifica el cliente cuyo id es clienteId
         description: |
           Los códigos de estado HTTP que puede devolver este endpoint son los siguientes
   
-          | Status Code | Descripción         | Motivo                                        |
+          | Código      | Descripción         | Motivo                                        |
           | ------------| --------------------| ----------------------------------------------|
           | **209**     | CONTENT RETURNED    | Si los datos del cliente han sido actualizado |
           | **404**     | NOT FOUND           | Si el cliente no existe                       |
@@ -179,6 +179,24 @@
   
           '422':
             $ref: '#/components/responses/Response_422'
+
+      delete:
+        summary: Elimina al cliente cuyo id es clienteId
+        description: |
+          Los códigos de estado HTTP que puede devolver este endpoint son los siguientes
+          
+          | Código           | Descripción | Motivo                                           |
+          | ---------------- | ------------| -------------------------------------------------|
+          | **204**          | NO CONTENT  | Si se ha eliminado al cliente                    |
+          | **404**          | NOT FOUND   | Si no existia un cliente con el id proporcionado |
+        operationId: cliente_delete
+        tags: ['👤 Cliente']
+        responses:
+          '204':
+            description: Cliente eliminado. El cuerpo de la repuesta esta vacío
+          '404':
+            $ref: '#/components/responses/Response_404'
+
 
   components:
     schemas:
@@ -239,7 +257,7 @@
           7 digitos y una letra mayuscula (calculada a partir de los 7 digitos anteriores).
         type: string
         pattern: '^[XYZ]?\d{7,8}[A-Z]$'
-        example: [ 'X1234567Z', '39580182H']
+        example: '39580182H'
         x-faker: helpers.regexpStyleStringParse('^[XYZ]?\d{7,8}[A-Z]$')
 
       Sexo_Cliente:
