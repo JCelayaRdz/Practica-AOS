@@ -625,7 +625,6 @@
           instance: about:blank
 
     requestBodies:
-      # TODO: Revisar request body
       clienteRB:
         description: Información del nuevo cliente
         required: true
