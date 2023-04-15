@@ -48,7 +48,7 @@
                       items:
                         $ref: '#/components/schemas/Cliente'
                     links:
-                      description: Enlaces de paginación y de los vehiculos del cliente
+                      description: Enlaces de paginación
                       readOnly: true
                       type: object
                       properties:
@@ -63,7 +63,6 @@
             $ref: '#/components/responses/Response_404'
   
       post:
-        # TODO: Preguntar si es necesario añadir el código de estado 400
         summary: Añade un nuevo cliente
         description: |
           Los códigos de estado HTTP que puede devolver este endpoint son los siguientes
@@ -87,6 +86,7 @@
               application/json:
                 schema:
                   $ref: '#/components/schemas/Cliente'
+
           '400':
             $ref: '#/components/responses/Response_400'
 
@@ -100,7 +100,7 @@
         tags: ['👤 Cliente']
         responses:
           '204':
-            description: 'Devuelve la cabecera `Allow` &lt;El cuerpo de la respuesta está vacío&gt;'
+            description: 'Devuelve la cabecera `Allow`. El cuerpo de la respuesta está vacío'
             headers:
               Allow:
                 $ref: '#/components/headers/Allow'
@@ -141,7 +141,7 @@
         tags: ['👤 Cliente']
         responses:
           '204':
-            description: 'Devuelve la cabecera `Allow` &lt;El cuerpo de la respuesta está vacío&gt;'
+            description: 'Devuelve la cabecera `Allow`. El cuerpo de la respuesta está vacío'
             headers:
               Allow:
                 $ref: '#/components/headers/Allow'
@@ -162,7 +162,7 @@
         parameters:
           - $ref: '#/components/parameters/ifMatchParam'
         requestBody:
-          $ref: '#/components/requestBodies/clienteUpdate'
+          $ref: '#/components/requestBodies/clienteRB'
         responses:
           '209':
             description: '`CONTENT RETURNED`: Los datos del cliente han sido actualizados'
@@ -197,56 +197,50 @@
           '404':
             $ref: '#/components/responses/Response_404'
 
-
   components:
     schemas:
       Cliente:
         title: '👤 Cliente'
         description: Datos de un cliente de un taller de mecánica
         type: object
+        required: [id, nombre, apellidos, numero_telefono, vehiculos]
         properties:
-          cliente:
+          id:
+            $ref: '#/components/schemas/Id_Cliente'
+          nombre:
+            type: string
+          apellidos:
+            type: string
+          sexo:
+            $ref: '#/components/schemas/Sexo_Cliente'
+          edad:
+            type: integer
+            format: int32
+          numero_telefono:
+            $ref: '#/components/schemas/Numero_Telefono'
+          correo_electronico:
+            $ref: '#/components/schemas/Correo_Electronico'
+          direccion:
+            $ref: '#/components/schemas/Direccion_Cliente'
+          vehiculos:
+            type: array
+            items:
+              $ref: '#/components/schemas/VIN_Vehiculo'
+            example: ['5NPET46C07H192362', '1B6MF36C6SS164013']
+          links:
+            description: Enlaces de relación del Cliente
+            readOnly: true
             type: object
-            # TODO: Revisar required
-            required: [id, nombre, apellidos, numero_telefono, vehiculos]
             properties:
-              id:
-                $ref: '#/components/schemas/Id_Cliente'
-              nombre:
-                type: string
-              apellidos:
-                type: string
-              sexo:
-                $ref: '#/components/schemas/Sexo_Cliente'
-              edad:
-                type: integer
-                format: int32
-              numero_telefono:
-                $ref: '#/components/schemas/Numero_Telefono'
-              correo_electronico:
-                $ref: '#/components/schemas/Correo_Electronico'
-              direccion:
-                $ref: '#/components/schemas/Direccion_Cliente'
+              parent:
+                $ref: '#/components/schemas/Link'
+              self:
+                $ref: '#/components/schemas/Link'
               vehiculos:
                 type: array
+                description: Enlaces a los vehiculos del cliente
                 items:
-                  $ref: '#/components/schemas/VIN_Vehiculo'
-                example: ['5NPET46C07H192362', '1B6MF36C6SS164013']
-              links:
-                description: Enlaces de relación del Cliente
-                readOnly: true
-                type: object
-                properties:
-                  parent:
-                    $ref: '#/components/schemas/Link'
-                  self:
-                    $ref: '#/components/schemas/Link'
-                  # TODO: Mejorar descripcion
-                  vehiculos:
-                    type: array
-                    description: Enlaces HATEOAS a los vehiculos del cliente
-                    items:
-                      $ref: '#/components/schemas/Link'
+                  $ref: '#/components/schemas/Link'
 
       Id_Cliente:
         title: '🆔 Identificador cliente'
@@ -279,7 +273,7 @@
           Un número de teléfono en España consta de un dígito entre 6 y 9 seguido
           de otros 8 dígitos.
         type: string
-        #pattern: "^(\+34|0034|34)?[6-9]\d{8}$"
+        pattern: "^(\+34|0034|34)?[6-9]\d{8}$"
         example: "+34612345678"
         x-faker: helpers.regexpStyleStringParse('^(\+34|0034|34)?[6-9]\d{8}$')
   
@@ -287,13 +281,12 @@
         title: '📧 Correo electrónico'
         description: Correo electrónico de un cliente
         type: string
-        #pattern: "^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*$"
+        pattern: "^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*$"
         example: "usuario@dominio.com"
         x-faker: helpers.regexpStyleStringParse('^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*$')
   
       Direccion_Cliente:
         title: '📍 Dirección'
-        # TODO: Mejorar la descricpion, revisar required
         description: Dirección de un cliente
         type: object
         required: [nombre_calle, numero_edificion]
@@ -314,10 +307,9 @@
           Este campo representa el nombre de una calle, de tal forma que siempre empiece con la
           abreviatura C/
         type: string
-        # TODO: Revisar expresión regular
-        pattern: "^C/[a-zA-Z]+"
-        example: "C/Herencia"
-        x-faker: helpers.regexpStyleStringParse('^C/[a-zA-Z]+')
+        pattern: "^C/ [a-zA-ZñÑáéíóúÁÉÍÓÚüÜ]+( [a-zA-ZñÑáéíóúÁÉÍÓÚüÜ]+)*$"
+        example: "C/ Herencia"
+        x-faker: helpers.regexpStyleStringParse('^C/ [a-zA-ZñÑáéíóúÁÉÍÓÚüÜ]+( [a-zA-ZñÑáéíóúÁÉÍÓÚüÜ]+)*$')
   
       HTTP_Problem:
         title: '🚨 Problema HTTP'
@@ -360,14 +352,13 @@
             type: string
             format: uri
             x-faker: internet.url
+            example: https://www.example.com/path/resource
           rel:
-            description: "Relación del recurso enlazado con el actual. Contiene una lista de tipos
-                            de relaciones separados por espacio."
+            description: 'Relación del recurso enlazado con el actual. Contiene una lista de tipos
+                            de relaciones separados por espacio.'
             type: string
             x-faker: lorem.words
-          #example:
-           # href: https://www.example.com/path/resource
-           # rel: relAction1 relAction2
+            example: relAction1 relAction2
 
       VIN_Vehiculo:
         title: '🚗 VIN'
@@ -395,12 +386,17 @@
       orderParam:
         name: order
         in: query
-        description: 'Criterio de ordenación de clientes'
+        description: |
+          Criterio de ordenación de clientes:
+          * `id`
+          * `nombre`
+          * `apellidos`
+          * `edad`
+          * `correo_electronico`
         required: false
         allowEmptyValue: false
         schema:
           type: string
-          # TODO: Revisar criterios de ordenacion
           enum:
             - id
             - nombre
@@ -411,7 +407,10 @@
       orderingParam:
         name: ordering
         in: query
-        description: 'Dirección de la ordenación: `ASC`(ascendente) | `DESC`(descendente)'
+        description: |
+          Dirección de la ordenación: 
+          * `ASC`(ascendente)
+          * `DESC`(descendente)'
         required: false
         allowEmptyValue: false
         schema:
@@ -439,8 +438,11 @@
   
     headers:
       ETag:
-        # TODO: Mejorar la descripción
-        description: "Entity Tag"
+        description: |
+          Entity Tag. Es una cadena de texto que permite identificar de forma
+          única el estado concreto de un recurso en un momento determinado.
+          Los Entity Tag's permiten a los clientes de la API cachear las respuestas
+          del servidor
         schema:
           type: string
           pattern: "[0-9a-f]*"
@@ -486,7 +488,7 @@
       Response_412:
         description: '`PRECONDITION FAILED`: El ETag no está actualizado'
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: '#/components/schemas/HTTP_Problem'
             examples:
@@ -514,9 +516,8 @@
   
       clientes-example:
         value:
-          # TODO: Revisar links
           clientes:
-            - { "cliente": {
+            - {
               "id": "82138284V",
               "nombre": "Alfonso",
               "apellidos": "Castillo Jurado",
@@ -526,7 +527,7 @@
               "correo_electronico": "acj@gmail.com",
               "vehiculos": ["3D7KU28C63G798405", "JH4KA7580RC013810"],
               "direccion": {
-                "nombre_calle": "C/Sol",
+                "nombre_calle": "C/ Sol",
                 "numero_edificacion": "10",
                 "detalles": "2A"
               },
@@ -542,16 +543,16 @@
                 "vehiculos": [
                   {
                     "href": "https://example.com/api/v1/vehiculos/3D7KU28C63G798405",
-                    "rel": "vehiculo"
+                    "rel": "vehiculo_get vehiculo_delete vehiculo_put"
                   },
                   {
                     "href": "https://example.com/api/v1/vehiculos/JH4KA7580RC013810",
-                    "rel": "vehiculo"
+                    "rel": "vehiculo_get vehiculo_delete vehiculo_put"
                   }
                 ]
               }
-            }}
-            - { "cliente": {
+            }
+            - {
               "id": "Z4467214K",
               "nombre": "Katherine",
               "apellidos": "Cruz Campo",
@@ -561,7 +562,7 @@
               "correo_electronico": "kathcc@gmail.com",
               "vehiculos": ["JH4KA7630NC013822"],
               "direccion": {
-                "nombre_calle": "C/Luna",
+                "nombre_calle": "C/ Luna",
                 "numero_edificacion": "11",
                 "detalles": "4F"
               },
@@ -577,11 +578,11 @@
                 "vehiculos": [
                   {
                     "href": "https://example.com/api/v1/vehiculos/JH4KA7630NC013822",
-                    "rel": "vehiculo"
+                    "rel": "vehiculo_get vehiculo_delete vehiculo_put"
                   }
                 ]
               }
-            }}
+            }
 
           links: {
             "prevPage": {
@@ -633,16 +634,13 @@
                   $ref: '#/components/schemas/Id_Cliente'
                 nombre:
                   type: string
-                  example: 'Fernando'
                 apellidos:
                   type: string
-                  example: 'Garcia Romero'
                 sexo:
                   $ref: '#/components/schemas/Sexo_Cliente'
                 edad:
                   type: integer
                   format: int32
-                  example: '45'
                 numero_telefono:
                   $ref: '#/components/schemas/Numero_Telefono'
                 correo_electronico:
@@ -653,32 +651,7 @@
                   type: array
                   items:
                     $ref: '#/components/schemas/VIN_Vehiculo'
-  
-      # TODO: Revisar el esquema y el ejempelo
-      clienteUpdate:
-        description: Nuevos atributos del cliente
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                dni:
-                  $ref: '#/components/schemas/Id_Cliente'
-                nombre:
-                  type: string
-                apellidos:
-                  type: string
-                sexo:
-                  $ref: '#/components/schemas/Sexo_Cliente'
-                edad:
-                  type: integer
-                  format: int32
-                numero_telefono:
-                  $ref: '#/components/schemas/Numero_Telefono'
-                correo_electronico:
-                  $ref: '#/components/schemas/Correo_Electronico'
-                direccion:
-                  $ref: '#/components/schemas/Direccion_Cliente'
-            example: { "dni": "60789201S", "nombre": "Miguel", "apellidos": "Campos Díaz", sexo: "Otro",
-                      "edad": 45, "numero_telefono": "762349810", "correo_electronico": "mcd@gmail.es" }
+            example: { "dni": "60789201S", "nombre": "Fernando", "apellidos": "Garcia Romero", sexo: "Masculino",
+                       "edad": 45, "numero_telefono": "662379815", "correo_electronico": "fgc@gmail.es",
+                        "direccion": { "nombre_calle": "C/ Enrique Tierno Galvan", "numero_edificacion": 11 },
+                       "vehiculos": ["SALAE25425A328687", "SCFAB22311K301756"]}
