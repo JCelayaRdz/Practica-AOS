@@ -209,13 +209,16 @@
             $ref: '#/components/schemas/Id_Cliente'
           nombre:
             type: string
+            example: Julio
           apellidos:
             type: string
+            example: Iglesias Castro
           sexo:
             $ref: '#/components/schemas/Sexo_Cliente'
           edad:
             type: integer
             format: int32
+            minimum: 0
           numero_telefono:
             $ref: '#/components/schemas/Numero_Telefono'
           correo_electronico:
@@ -273,34 +276,36 @@
           Un número de teléfono en España consta de un dígito entre 6 y 9 seguido
           de otros 8 dígitos.
         type: string
-        pattern: "^(\+34|0034|34)?[6-9]\d{8}$"
+        pattern: "^(?:(?:\\+|00)34)?[6-9]\\d{8}$"
         example: "+34612345678"
-        x-faker: helpers.regexpStyleStringParse('^(\+34|0034|34)?[6-9]\d{8}$')
+        x-faker: helpers.regexpStyleStringParse('^(?:(?:\\+|00)34)?[6-9]\\d{8}$')
   
       Correo_Electronico:
         title: '📧 Correo electrónico'
         description: Correo electrónico de un cliente
         type: string
-        pattern: "^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*$"
+        pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
         example: "usuario@dominio.com"
-        x-faker: helpers.regexpStyleStringParse('^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*$')
+        x-faker: helpers.regexpStyleStringParse('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')
   
       Direccion_Cliente:
         title: '📍 Dirección'
         description: Dirección de un cliente
         type: object
-        required: [nombre_calle, numero_edificion]
+        required: [nombre_calle, numero_edificacion]
         properties:
           nombre_calle:
             $ref: '#/components/schemas/Nombre_Calle'
-          numero_edificion:
+          numero_edificacion:
             type: integer
             format: int32
+            minimum: 0
             description: Representa el nombre de un portal o de una casa.
           detalles:
             type: string
             description: Detalles adicionales, como el número de piso
-  
+            example: 1E
+
       Nombre_Calle:
         title: '🛣️ Calle'
         description: |
@@ -651,7 +656,7 @@
                   type: array
                   items:
                     $ref: '#/components/schemas/VIN_Vehiculo'
-            example: { "dni": "60789201S", "nombre": "Fernando", "apellidos": "Garcia Romero", sexo: "Masculino",
+            example: { "id": "60789201S", "nombre": "Fernando", "apellidos": "Garcia Romero", sexo: "Masculino",
                        "edad": 45, "numero_telefono": "662379815", "correo_electronico": "fgc@gmail.es",
                         "direccion": { "nombre_calle": "C/ Enrique Tierno Galvan", "numero_edificacion": 11 },
                        "vehiculos": ["SALAE25425A328687", "SCFAB22311K301756"]}
