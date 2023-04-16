@@ -156,7 +156,7 @@
           | **209**     | CONTENT RETURNED    | Si los datos del cliente han sido actualizado |
           | **404**     | NOT FOUND           | Si el cliente no existe                       |
           | **412**     | PRECONDITION FAILED | Si el ETag proporcionado no está actualizado  |
-          | **422**     | UNPROCESSABLE ENTITY| Valor no permitido en alguno de los attributos|
+          | **422**     | UNPROCESSABLE ENTITY| Valor no permitido en alguno de los atributos |
         operationId: cliente_put
         tags: ['👤 Cliente']
         parameters:
@@ -188,7 +188,7 @@
           | Código           | Descripción | Motivo                                           |
           | ---------------- | ------------| -------------------------------------------------|
           | **204**          | NO CONTENT  | Si se ha eliminado al cliente                    |
-          | **404**          | NOT FOUND   | Si no existia un cliente con el id proporcionado |
+          | **404**          | NOT FOUND   | Si no existía un cliente con el id proporcionado |
         operationId: cliente_delete
         tags: ['👤 Cliente']
         responses:
@@ -231,7 +231,7 @@
               $ref: '#/components/schemas/VIN_Vehiculo'
             example: ['5NPET46C07H192362', '1B6MF36C6SS164013']
           links:
-            description: Enlaces de relación del Cliente
+            description: Enlaces de relación del cliente
             readOnly: true
             type: object
             properties:
@@ -241,7 +241,7 @@
                 $ref: '#/components/schemas/Link'
               vehiculos:
                 type: array
-                description: Enlaces a los vehiculos del cliente
+                description: 'Enlaces a los vehículos del cliente'
                 items:
                   $ref: '#/components/schemas/Link'
 
@@ -249,9 +249,9 @@
         title: '🆔 Identificador cliente'
         description: |
           El identificador de un cliente es su DNI o su NIE.
-          El DNI (Documento Nacional de Identidad) consta de 8 digitos y una letra mayuscula.
-          El NIE (Número de Identidad de Extranjero) consta de una letra inicial mayuscula (X,Y o Z),
-          7 digitos y una letra mayuscula (calculada a partir de los 7 digitos anteriores).
+          El DNI (Documento Nacional de Identidad) consta de 8 dígitos y una letra mayúscula.
+          El NIE (Número de Identidad de Extranjero) consta de una letra inicial mayúscula (X, Y o Z),
+          7 dígitos y una letra mayúscula (calculada a partir de los 7 dígitos anteriores).
         type: string
         pattern: '^[XYZ]?\d{7,8}[A-Z]$'
         example: '39580182H'
@@ -269,7 +269,7 @@
         x-faker: helpers.arrayElement(['Masculino', 'Femenino', 'Otro'])
   
       Numero_Telefono:
-        title: '📞 Número de telefono'
+        title: '📞 Número de teléfono'
         description: | 
           Número de teléfono (español) de un cliente. Este esquema permite
           el formato internacional (+34, 0034 o 34) al principio del número.
@@ -471,7 +471,7 @@
   
     responses:
       Response_404:
-        description: '`NOT FOUND`: recurso no disponible'
+        description: '`NOT FOUND`: Recurso no disponible'
         content:
           application/problem+json:
             schema:
@@ -626,7 +626,7 @@
 
     requestBodies:
       clienteRB:
-        description: Información del nuevo cliente
+        description: Información del nuevo cliente o información actualizada
         required: true
         content:
           application/json:
