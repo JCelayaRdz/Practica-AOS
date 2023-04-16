@@ -5,6 +5,9 @@
     title: "[Equipo 6] Gestión de clientes"
     description: >
       ## API REST para la gestión de clientes de talleres de mecánica
+    license:
+      name: MIT
+      url: 'https://opensource.org/licenses/MIT'
   
   servers:
     - url: http://127.0.0.1:80/api/v1
@@ -533,7 +536,7 @@
               "vehiculos": ["3D7KU28C63G798405", "JH4KA7580RC013810"],
               "direccion": {
                 "nombre_calle": "C/ Sol",
-                "numero_edificacion": "10",
+                "numero_edificacion": 10,
                 "detalles": "2A"
               },
               "links": {
@@ -568,7 +571,7 @@
               "vehiculos": ["JH4KA7630NC013822"],
               "direccion": {
                 "nombre_calle": "C/ Luna",
-                "numero_edificacion": "11",
+                "numero_edificacion": 11,
                 "detalles": "4F"
               },
               "links": {
