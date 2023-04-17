@@ -1,0 +1,6 @@
+name: cliente_id
+in: path
+description: Identificador único de un cliente
+required: true
+schema:
+  $ref: ../schemas/Id_Cliente.yaml

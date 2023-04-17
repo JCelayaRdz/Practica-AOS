@@ -1,0 +1,9 @@
+name: page
+in: query
+description: Número de página de clientes
+required: false
+allowEmptyValue: false
+schema:
+  type: integer
+  format: int32
+  minimum: 1

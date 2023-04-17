@@ -1,0 +1,115 @@
+parameters:
+  - $ref: ../components/parameters/clienteId.yaml
+get:
+  summary: Obtiene el cliente cuyo id es clienteId
+  description: >
+    Los códigos de estado HTTP que puede devolver este endpoint son los
+    siguientes
+
+
+    | Código      | Descripción | Motivo                             |
+
+    | ------------| ------------| -----------------------------------|
+
+    | **200**     | OK          | Si existe el cliente               |
+
+    | **404**     | NOT FOUND   | Si no existe el cliente            |
+  operationId: cliente_get
+  tags:
+    - 👤 Cliente
+  responses:
+    '200':
+      description: Cliente
+      headers:
+        ETag:
+          $ref: ../components/headers/ETag.yaml
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Cliente.yaml
+    '404':
+      $ref: ../components/responses/Response_404.yaml
+options:
+  summary: Devuelve la lista de los métodos HTTP soportados por este endpoint
+  description: >-
+    Devuelve una cabecera `Allow` con la lista de métodos HTTP soportados,
+    separados por comas
+  operationId: cliente_options
+  tags:
+    - 👤 Cliente
+  responses:
+    '204':
+      description: Devuelve la cabecera `Allow`. El cuerpo de la respuesta está vacío
+      headers:
+        Allow:
+          $ref: ../components/headers/Allow.yaml
+put:
+  summary: Modifica el cliente cuyo id es clienteId
+  description: >
+    Los códigos de estado HTTP que puede devolver este endpoint son los
+    siguientes
+
+
+    | Código      | Descripción         |
+    Motivo                                        |
+
+    | ------------| --------------------|
+    ----------------------------------------------|
+
+    | **209**     | CONTENT RETURNED    | Si los datos del cliente han sido
+    actualizado |
+
+    | **404**     | NOT FOUND           | Si el cliente no
+    existe                       |
+
+    | **412**     | PRECONDITION FAILED | Si el ETag proporcionado no está
+    actualizado  |
+
+    | **422**     | UNPROCESSABLE ENTITY| Valor no permitido en alguno de los
+    atributos |
+  operationId: cliente_put
+  tags:
+    - 👤 Cliente
+  parameters:
+    - $ref: ../components/parameters/ifMatchParam.yaml
+  requestBody:
+    $ref: ../components/requestBodies/clienteRB.yaml
+  responses:
+    '209':
+      description: '`CONTENT RETURNED`: Los datos del cliente han sido actualizados'
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Cliente.yaml
+    '404':
+      $ref: ../components/responses/Response_404.yaml
+    '412':
+      $ref: ../components/responses/Response_412.yaml
+    '422':
+      $ref: ../components/responses/Response_422.yaml
+delete:
+  summary: Elimina al cliente cuyo id es clienteId
+  description: >
+    Los códigos de estado HTTP que puede devolver este endpoint son los
+    siguientes
+
+
+    | Código           | Descripción |
+    Motivo                                           |
+
+    | ---------------- | ------------|
+    -------------------------------------------------|
+
+    | **204**          | NO CONTENT  | Si se ha eliminado al
+    cliente                    |
+
+    | **404**          | NOT FOUND   | Si no existía un cliente con el id
+    proporcionado |
+  operationId: cliente_delete
+  tags:
+    - 👤 Cliente
+  responses:
+    '204':
+      description: Cliente eliminado. El cuerpo de la repuesta esta vacío
+    '404':
+      $ref: ../components/responses/Response_404.yaml

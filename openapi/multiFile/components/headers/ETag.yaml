@@ -1,0 +1,9 @@
+description: |
+  Entity Tag. Es una cadena de texto que permite identificar de forma
+  única el estado concreto de un recurso en un momento determinado.
+  Los Entity Tag's permiten a los clientes de la API cachear las respuestas
+  del servidor
+schema:
+  type: string
+  pattern: '[0-9a-f]*'
+  example: abcdefg123456789

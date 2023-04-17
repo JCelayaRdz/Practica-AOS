@@ -1,0 +1,16 @@
+title: 🆔 Identificador cliente
+description: >
+  El identificador de un cliente es su DNI o su NIE.
+
+  El DNI (Documento Nacional de Identidad) consta de 8 dígitos y una letra
+  mayúscula.
+
+  El NIE (Número de Identidad de Extranjero) consta de una letra inicial
+  mayúscula (X, Y o Z),
+
+  7 dígitos y una letra mayúscula (calculada a partir de los 7 dígitos
+  anteriores).
+type: string
+pattern: ^[XYZ]?\d{7,8}[A-Z]$
+example: 39580182H
+x-faker: helpers.regexpStyleStringParse('^[XYZ]?\d{7,8}[A-Z]$')

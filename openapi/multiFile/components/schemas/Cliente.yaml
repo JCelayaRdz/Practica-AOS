@@ -1,0 +1,51 @@
+title: 👤 Cliente
+description: Datos de un cliente de un taller de mecánica
+type: object
+required:
+  - id
+  - nombre
+  - apellidos
+  - numero_telefono
+  - vehiculos
+properties:
+  id:
+    $ref: ./Id_Cliente.yaml
+  nombre:
+    type: string
+    example: Julio
+  apellidos:
+    type: string
+    example: Iglesias Castro
+  sexo:
+    $ref: ./Sexo_Cliente.yaml
+  edad:
+    type: integer
+    format: int32
+    minimum: 0
+  numero_telefono:
+    $ref: ./Numero_Telefono.yaml
+  correo_electronico:
+    $ref: ./Correo_Electronico.yaml
+  direccion:
+    $ref: ./Direccion_Cliente.yaml
+  vehiculos:
+    type: array
+    items:
+      $ref: ./VIN_Vehiculo.yaml
+    example:
+      - 5NPET46C07H192362
+      - 1B6MF36C6SS164013
+  links:
+    description: Enlaces de relación del cliente
+    readOnly: true
+    type: object
+    properties:
+      parent:
+        $ref: ./Link.yaml
+      self:
+        $ref: ./Link.yaml
+      vehiculos:
+        type: array
+        description: Enlaces a los vehículos del cliente
+        items:
+          $ref: ./Link.yaml

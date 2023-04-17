@@ -1,0 +1,8 @@
+description: '`BAD REQUEST`: Existe un cliente con el id proporcionado'
+content:
+  application/problem+json:
+    schema:
+      $ref: ../schemas/HTTP_Problem.yaml
+    examples:
+      response-http-400:
+        $ref: ../examples/response-http-400.yaml

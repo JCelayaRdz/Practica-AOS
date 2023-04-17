@@ -1,0 +1,58 @@
+value:
+  clientes:
+    - id: 82138284V
+      nombre: Alfonso
+      apellidos: Castillo Jurado
+      sexo: Masculino
+      edad: 33
+      numero_telefono: '+34672569310'
+      correo_electronico: acj@gmail.com
+      vehiculos:
+        - 3D7KU28C63G798405
+        - JH4KA7580RC013810
+      direccion:
+        nombre_calle: C/ Sol
+        numero_edificacion: 10
+        detalles: 2A
+      links:
+        parent:
+          href: https://example.com/api/v1/clientes
+          rel: cliente_cget cliente_post
+        self:
+          href: https://example.com/api/v1/clientes/82138284V
+          rel: cliente_get cliente_delete cliente_put
+        vehiculos:
+          - href: https://example.com/api/v1/vehiculos/3D7KU28C63G798405
+            rel: vehiculo_get vehiculo_delete vehiculo_put
+          - href: https://example.com/api/v1/vehiculos/JH4KA7580RC013810
+            rel: vehiculo_get vehiculo_delete vehiculo_put
+    - id: Z4467214K
+      nombre: Katherine
+      apellidos: Cruz Campo
+      sexo: Femenino
+      edad: 22
+      numero_telefono: '+34773169320'
+      correo_electronico: kathcc@gmail.com
+      vehiculos:
+        - JH4KA7630NC013822
+      direccion:
+        nombre_calle: C/ Luna
+        numero_edificacion: 11
+        detalles: 4F
+      links:
+        parent:
+          href: https://example.com/api/v1/clientes
+          rel: cliente_cget cliente_post
+        self:
+          href: https://example.com/api/v1/clientes/Z4467214K
+          rel: cliente_get cliente_delete cliente_put
+        vehiculos:
+          - href: https://example.com/api/v1/vehiculos/JH4KA7630NC013822
+            rel: vehiculo_get vehiculo_delete vehiculo_put
+  links:
+    prevPage:
+      href: https://example.com/api/v1/clientes?page=1
+      rel: prevPage
+    nextPage:
+      href: https://example.com/api/v1/clientes?page=2
+      rel: nextPage

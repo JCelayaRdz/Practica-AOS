@@ -1,0 +1,12 @@
+title: 👨👩 Sexo
+description: |
+  Enum que representa el sexo de un cliente:
+  * `Masculino`
+  * `Femenino`
+  * `Otro`
+type: string
+enum:
+  - Masculino
+  - Femenino
+  - Otro
+x-faker: helpers.arrayElement(['Masculino', 'Femenino', 'Otro'])

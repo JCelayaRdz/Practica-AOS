@@ -1,0 +1,14 @@
+title: 🚗 VIN
+description: >
+  Representa una referencia al VIN (Vehicle Identification Number) de un
+  vehículo.
+
+  El VIN es un código alfanumérico de 17 caracteres que se utiliza para
+  identificar de 
+
+  manera única un vehículo en todo el mundo.
+type: string
+pattern: ^[A-HJ-NPR-Z\d]{8}[\dX][A-HJ-NPR-Z\d]{2}\d{6}$
+example: 2C3CDZC99FH500660
+x-faker: >-
+  helpers.regexpStyleStringParse('^[A-HJ-NPR-Z\\d]{8}[\\dX][A-HJ-NPR-Z\\d]{2}\\d{6}$')

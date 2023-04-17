@@ -1,0 +1,10 @@
+title: 📞 Número de teléfono
+description: |
+  Número de teléfono (español) de un cliente. Este esquema permite
+  el formato internacional (+34, 0034 o 34) al principio del número.
+  Un número de teléfono en España consta de un dígito entre 6 y 9 seguido
+  de otros 8 dígitos.
+type: string
+pattern: ^(?:(?:\+|00)34)?[6-9]\d{8}$
+example: '+34612345678'
+x-faker: helpers.regexpStyleStringParse('^(?:(?:\\+|00)34)?[6-9]\\d{8}$')

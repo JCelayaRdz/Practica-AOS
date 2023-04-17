@@ -1,0 +1,48 @@
+description: Información del nuevo cliente o información actualizada
+required: true
+content:
+  application/json:
+    schema:
+      type: object
+      required:
+        - id
+        - nombre
+        - apellidos
+        - numero_telefono
+        - vehiculos
+      properties:
+        id:
+          $ref: ../schemas/Id_Cliente.yaml
+        nombre:
+          type: string
+        apellidos:
+          type: string
+        sexo:
+          $ref: ../schemas/Sexo_Cliente.yaml
+        edad:
+          type: integer
+          format: int32
+        numero_telefono:
+          $ref: ../schemas/Numero_Telefono.yaml
+        correo_electronico:
+          $ref: ../schemas/Correo_Electronico.yaml
+        direccion:
+          $ref: ../schemas/Direccion_Cliente.yaml
+        vehiculos:
+          type: array
+          items:
+            $ref: ../schemas/VIN_Vehiculo.yaml
+    example:
+      id: 60789201S
+      nombre: Fernando
+      apellidos: Garcia Romero
+      sexo: Masculino
+      edad: 45
+      numero_telefono: '662379815'
+      correo_electronico: fgc@gmail.es
+      direccion:
+        nombre_calle: C/ Enrique Tierno Galvan
+        numero_edificacion: 11
+      vehiculos:
+        - SALAE25425A328687
+        - SCFAB22311K301756

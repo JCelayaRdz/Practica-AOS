@@ -1,0 +1,19 @@
+name: order
+in: query
+description: |
+  Criterio de ordenación de clientes:
+  * `id`
+  * `nombre`
+  * `apellidos`
+  * `edad`
+  * `correo_electronico`
+required: false
+allowEmptyValue: false
+schema:
+  type: string
+  enum:
+    - id
+    - nombre
+    - apellidos
+    - edad
+    - correo_electronico

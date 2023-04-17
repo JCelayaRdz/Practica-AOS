@@ -1,0 +1,6 @@
+description: '`URI` del recurso creado'
+schema:
+  type: string
+  format: uri
+  x-faker: internet.url
+  example: com/api/v1/clientes/39580182H

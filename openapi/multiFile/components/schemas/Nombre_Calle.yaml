@@ -1,0 +1,12 @@
+title: 🛣️ Calle
+description: >
+  Este campo representa el nombre de una calle, de tal forma que siempre empiece
+  con la
+
+  abreviatura C/
+type: string
+pattern: ^C/ [a-zA-ZñÑáéíóúÁÉÍÓÚüÜ]+( [a-zA-ZñÑáéíóúÁÉÍÓÚüÜ]+)*$
+example: C/ Herencia
+x-faker: >-
+  helpers.regexpStyleStringParse('^C/ [a-zA-ZñÑáéíóúÁÉÍÓÚüÜ]+(
+  [a-zA-ZñÑáéíóúÁÉÍÓÚüÜ]+)*$')

@@ -1,0 +1,13 @@
+name: ordering
+in: query
+description: |
+  Dirección de la ordenación: 
+  * `ASC`(ascendente)
+  * `DESC`(descendente)'
+required: false
+allowEmptyValue: false
+schema:
+  type: string
+  enum:
+    - ASC
+    - DESC

@@ -1,0 +1,105 @@
+get:
+  summary: Obtiene todos los clientes de un taller
+  description: >
+    Los códigos de estado HTTP que puede devolver este endpoint son los
+    siguientes
+
+
+    | Código  | Descripción | Motivo                       |
+
+    | ------  | ----------- | ---------------------------- |
+
+    | **200** | OK          | Listado completo de clientes |
+
+    | **404** | NOT FOUND   | No existe ningún cliente     |
+  operationId: cliente_cget
+  tags:
+    - 👤 Cliente
+  parameters:
+    - $ref: ../components/parameters/pageParam.yaml
+    - $ref: ../components/parameters/orderParam.yaml
+    - $ref: ../components/parameters/orderingParam.yaml
+  responses:
+    '200':
+      description: Lista de clientes del taller
+      headers:
+        ETag:
+          $ref: ../components/headers/ETag.yaml
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              clientes:
+                description: Lista de clientes
+                type: array
+                items:
+                  $ref: ../components/schemas/Cliente.yaml
+              links:
+                description: Enlaces de paginación
+                readOnly: true
+                type: object
+                properties:
+                  prevPage:
+                    $ref: ../components/schemas/Link.yaml
+                  nextPage:
+                    $ref: ../components/schemas/Link.yaml
+          examples:
+            clientes-example:
+              $ref: ../components/examples/clientes-example.yaml
+    '404':
+      $ref: ../components/responses/Response_404.yaml
+post:
+  summary: Añade un nuevo cliente
+  description: >
+    Los códigos de estado HTTP que puede devolver este endpoint son los
+    siguientes
+
+
+    | Código      | Descripción          |
+    Motivo                                    |
+
+    | ------------| ---------------------|
+    ------------------------------------------|
+
+    | **201**     | CREATED              | Se ha añadido un
+    cliente                  |
+
+    | **400**     | BAD REQUEST          | Existe un cliente con el id
+    proporcionado |
+
+    | **422**     | UNPROCESSABLE ENTITY | Falta alguno de los atributos
+    obligatorios|
+  tags:
+    - 👤 Cliente
+  operationId: cliente_post
+  requestBody:
+    $ref: ../components/requestBodies/clienteRB.yaml
+  responses:
+    '201':
+      description: Cliente añadido
+      headers:
+        Location:
+          $ref: ../components/headers/Location.yaml
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Cliente.yaml
+    '400':
+      $ref: ../components/responses/Response_400.yaml
+    '422':
+      $ref: ../components/responses/Response_422.yaml
+options:
+  summary: Devuelve la lista de los métodos HTTP soportados por este endpoint
+  description: >-
+    Devuelve una cabecera `Allow` con la lista de métodos HTTP soportados,
+    separados por comas
+  operationId: cliente_coptions
+  tags:
+    - 👤 Cliente
+  responses:
+    '204':
+      description: Devuelve la cabecera `Allow`. El cuerpo de la respuesta está vacío
+      headers:
+        Allow:
+          $ref: ../components/headers/Allow.yaml

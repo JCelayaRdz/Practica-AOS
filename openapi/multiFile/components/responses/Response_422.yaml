@@ -1,0 +1,8 @@
+description: '`UNPROCESSABLE ENTITY`: Faltan atributos obligatorios'
+content:
+  application/problem+json:
+    schema:
+      $ref: ../schemas/HTTP_Problem.yaml
+    examples:
+      response-http-422:
+        $ref: ../examples/response-http-422.yaml

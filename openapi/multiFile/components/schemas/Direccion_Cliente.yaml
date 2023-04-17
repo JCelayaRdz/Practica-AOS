@@ -1,0 +1,18 @@
+title: 📍 Dirección
+description: Dirección de un cliente
+type: object
+required:
+  - nombre_calle
+  - numero_edificacion
+properties:
+  nombre_calle:
+    $ref: ./Nombre_Calle.yaml
+  numero_edificacion:
+    type: integer
+    format: int32
+    minimum: 0
+    description: Representa el nombre de un portal o de una casa.
+  detalles:
+    type: string
+    description: Detalles adicionales, como el número de piso
+    example: 1E

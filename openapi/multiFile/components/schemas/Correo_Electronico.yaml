@@ -1,0 +1,7 @@
+title: 📧 Correo electrónico
+description: Correo electrónico de un cliente
+type: string
+pattern: ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$
+example: usuario@dominio.com
+x-faker: >-
+  helpers.regexpStyleStringParse('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')
